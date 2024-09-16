@@ -1,5 +1,11 @@
 module DenseGillespieAlgorithm
 
-# Write your package code here.
+import Random
+import Distributions
+import ProgressMeter
+
+export run_gillespie!
+include("functions.jl")
+
 
 end
