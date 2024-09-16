@@ -27,6 +27,7 @@ jobs:
           using Documenter: doctest
           using DenseGillespieAlgorithm
           doctest(DenseGillespieAlgorithm)
+      - run: julia --project= docs/make.jl
       - name: Build and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # If authenticating with GitHub Actions token
