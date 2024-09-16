@@ -32,7 +32,7 @@ end
 """
 function mainiteration!(pop_hist,rates,n0::Real,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart) where {F1,F2,F3}
     #run simulation
-    @showprogress for (index,step) in enumerate(time)
+    ProgressMeter.@showprogress for (index,step) in enumerate(time)
         #move index
         index += hstart
         #save one step evolution
@@ -54,7 +54,7 @@ end
 """
 function mainiteration!(pop_hist,rates,n0,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart) where {F1,F2,F3}
     #run simulation
-    @showprogress for (index,step) in enumerate(time)
+    ProgressMeter.@showprogress for (index,step) in enumerate(time)
         #move index
         index += hstart
         #clean up dictionary by deleting keys with value zero
