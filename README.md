@@ -105,6 +105,7 @@ run_gillespie!(
 # Analyze or plot the result (example with a simple print)
 plot(hist,label=["S" "I" "R"])
 ```
+![SIR Plot](https://roccminton.github.io/images/SIR.png)
 
 ### Key Function
 `run_gillespie`: This is the main function that runs the simulation, given the initial state, the affect and the rates function and the maximum time to simulate. The arguments are as follows:
