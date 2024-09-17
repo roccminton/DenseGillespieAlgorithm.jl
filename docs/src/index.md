@@ -1,4 +1,4 @@
-# The DenseGillespieAlgorithm Function Index
+# Function Index
 
 ## Module Index
 

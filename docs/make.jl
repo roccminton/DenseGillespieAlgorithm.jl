@@ -3,11 +3,12 @@ push!(LOAD_PATH,"../src/")
 
 using Documenter, DenseGillespieAlgorithm
 
-makedocs(sitename="DenseGillespieAlgorithm.jl Documentation",
+makedocs(sitename="DenseGillespieAlgorithm.jl",
          pages = [
-            "DenseGillespieAlgorithm Package" => "DGAPackage.md",
+            "DGAPackage.md",
+            "Manual" => "manual.md",
             "Examples" => "examples.md",
-            "Index" => "index.md",
+            "Index" => "index.md"
          ],
          format = Documenter.HTML(prettyurls = false)
 )

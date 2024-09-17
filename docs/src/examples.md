@@ -1,4 +1,4 @@
-# Examples for the DenseGillespieAlgorithm
+# Examples
 
 Three illustrative examples are provided. The first is a minimal working example, designed to facilitate the initial implementation of the framework on the user's machine. The second is a slightly more advanced example, which illustrates the use of an uncountable trait space. The third is a highly complex example, which demonstrates the comprehensive versatility of the package.
 
