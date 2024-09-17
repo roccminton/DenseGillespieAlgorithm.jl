@@ -22,7 +22,7 @@ You can install the package directly from this GitHub repository:
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/username/DenseGillespieAlgorithm.jl")
+Pkg.add("https://github.com/roccminton/DenseGillespieAlgorithm.jl")
 ```
 ### Install from Julia
 
@@ -42,26 +42,70 @@ The following minimal working example demonstrates the use of  **DenseGillespieA
 ### Example: SIR 
 
 ```julia
+using Plots
 using DenseGillespieAlgorithm
 
-# Define the initial state of the system (e.g., number of molecules)
-initial_state = [100, 50]
+# Define the reactions
+function infection!(x)
+    x[1] += -1
+    x[2] += 1
+    nothing
+end
+
+function recovery!(x)
+    x[2] += -1
+    x[3] += 1
+    nothing
+end
+
+#Combine all reactions into one execute! function
+function execute!(i,x,par)
+    if i == 1
+        infection!(x)
+    elseif i == 2
+        recovery!(x)
+    else
+        error("Unknown event number i = $i")
+    end
+    nothing
+end
 
 # Define the reactions (reaction rates and species interactions)
-reactions = [
-    (rate=0.1, reactants=[1, 0], products=[0, 1]),  # Reaction 1
-    (rate=0.05, reactants=[0, 1], products=[1, 0])  # Reaction 2
-]
+function rates!(rates,x,par)
+    #rate of infection
+    rates[1] = par.β * x[1] * x[2]
+    #rate of recovery
+    rates[2] = par.γ * x[2]
+    nothing
+end
 
-# Simulation parameters
-tmax = 100.0  # Maximum simulation time
+#------
+#Define the model parameter 
+par = (
+    β = 0.000005,
+    γ = 0.005
+    )
+
+# Define the initial state of the system 
+x0 = [9999,1,0]
+
+# Define the time horizon for the simulation
+t = 0:2000
+
+# Initialize population history
+hist = zeros(Int,(length(t),3))
 
 # Run the simulation
-result = simulate_gillespie(initial_state, reactions, tmax)
+run_gillespie!(
+        t,x0,par,
+        execute!,rates!,
+        Vector{Float64}(undef,2),hist
+        )
 
 # Analyze or plot the result (example with a simple print)
-println(result)
+plot(hist,label=["S" "I" "R"])
 ```
+
 ### Key Function
 `run_gillespie`: This is the main function that runs the simulation, given the initial state, the affect and the rates function and the maximum time to simulate. The arguments are as follows:
   - `time`: Time intervall for simulation, eg. a range like 1:100
