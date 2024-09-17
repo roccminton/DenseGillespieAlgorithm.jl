@@ -5,10 +5,11 @@ using Documenter, DenseGillespieAlgorithm
 
 makedocs(sitename="DenseGillespieAlgorithm.jl",
          pages = [
-            "DGAPackage.md",
+            "Home" => "DGAPackage.md",
             "Manual" => "manual.md",
             "Examples" => "examples.md",
-            "Index" => "index.md"
+            "Performance Tips" => "perform.md",
+            "Public API" => "index.md"
          ],
          format = Documenter.HTML(prettyurls = false)
 )

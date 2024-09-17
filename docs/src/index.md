@@ -1,11 +1,7 @@
-# Function Index
+# Public API
 
-## Module Index
+Puplic documentation of all internal functions. 
 
-```@index
-Modules = [DenseGillespieAlgorithm]
-Order   = [:constant, :type, :function, :macro]
-```
 ## Detailed API
 
 ```@autodocs

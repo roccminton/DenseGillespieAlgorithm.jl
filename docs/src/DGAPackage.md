@@ -10,3 +10,14 @@ The Gillespie algorithm is a highly renowned and widely utilised technique acros
 However, the majority of implementations of the Gillespie algorithm require prior knowledge of all potential types and all reactions between these types before the reaction commences. A classic illustration of this is the SIR model (see [Examples](@ref).
 The objective of our implementation in this package is to eliminate this restriction and permit the consideration of both high-dimensional systems, where the precise interactions between every conceivable combination are theoretically possible but practically infeasible, and additionally, systems where the trait space is uncountable, such as the real line. In both cases, the number of distinct traits that are present at any given time is finite, given that the population size is limited. However, new types emerge during the course of the simulation, and the interactions between these types are determined by their specific characteristics. 
 
+## Manual Outline
+```@contents
+Pages = ["manual.md","examples.md","perform.md","index.md"]
+```
+
+## Index
+
+```@index
+Modules = [DenseGillespieAlgorithm]
+Order   = [:constant, :type, :function, :macro]
+```

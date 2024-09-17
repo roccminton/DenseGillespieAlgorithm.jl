@@ -3,7 +3,7 @@
 
 Run a exact stochastic simulation, return and fill the `population_history`.
 
-#Arguments
+# Arguments
 - `time::AbstracVector`: time interval for the simulation
 - `n₀`: initial population state
 - `par`: additional parameter (gets passed to `execute!` and `rates!`)
