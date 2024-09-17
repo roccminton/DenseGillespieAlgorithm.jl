@@ -73,5 +73,7 @@ plot(hist,label=["S" "I" "R"])
 ```
 ![SIR Plot](https://roccminton.github.io/images/SIR.png)
 
-###### Remark
-!!! note While it is feasible to construct such straightforward examples using the DenseGillespieAlgorithm, this is not the typical application. For relatively simple models, the [JumpProcess.jl](https://docs.sciml.ai/JumpProcesses/stable/) package offers greater flexibility and facilitates the implementation process.
+!!! note "Note"
+    While it is feasible to construct such straightforward examples using the DenseGillespieAlgorithm, this is not the typical application. For relatively simple models, the [JumpProcess.jl](https://docs.sciml.ai/JumpProcesses/stable/) package offers greater flexibility and facilitates the implementation process.
+
+## Continuous Trait Space
