@@ -40,7 +40,9 @@ This will install the latest stable version of the package and all required depe
 The following minimal working example demonstrates the use of  **DenseGillespieAlgorithm.jl** for the simulation of a simple SIR model. It should be noted that the framework was not designed for such simple systems. However, the [JumpProcesses.jl](https://docs.sciml.ai/JumpProcesses/stable/) within the SciML ecosystem offers greater flexibility, features and speed for these kinds of problems. The **DenseGillespieAlgorithm.jl** is optimised for high-dimensional systems. For further insight into the simulation framework and its applications, please refer to the accompanying [documentation](https://roccminton.github.io/DenseGillespieAlgorithm.jl/stable).
 
 ### Example: SIR 
+The SIR model is a tree-dimensional model that is used to model infectious diseases. It is a simple model that assumes that individuals can be placed into one of three categories: susceptible, infected, or recovered. Infected individuals can infect susceptible individuals through random interactions. After becoming infected, individuals can recover and become immune. For more details, see for example [here](https://people.wku.edu/lily.popova.zhuhadar/).
 
+The SIR (susceptible-infected-recovered) model is
 ```julia
 using Plots
 using DenseGillespieAlgorithm
