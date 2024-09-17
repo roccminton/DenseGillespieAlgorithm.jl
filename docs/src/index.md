@@ -1,9 +1,5 @@
 # The DenseGillespieAlgorithm Module
 
-```@docs
-DenseGillespieAlgorithm
-```
-
 ## Module Index
 
 ```@index
