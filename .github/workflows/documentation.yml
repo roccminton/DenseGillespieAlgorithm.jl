@@ -1,30 +1,36 @@
-name: Documentation
-
+name: Documenter
 on:
-  push:
-    branches:
-      - main # update to match your development branch (master, main, dev, trunk, ...)
-    tags: '*'
-  pull_request:
-
+  - push
+  - pull_request
 jobs:
-  build:
-    permissions:
-      actions: write
-      contents: write
-      pull-requests: read
-      statuses: write
+  docs:
+    name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v2
+      - name: Check out
+        uses: actions/checkout@v2
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v1
         with:
-          version: '1'
-      - uses: julia-actions/cache@v2
-      - name: Install dependencies
-        run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
-      - name: Build and deploy
+          version: '1.7'
+
+      - name: Build package
+        run: |
+          julia --project=docs -e '
+            import Pkg; Pkg.add("Documenter")
+            using Pkg
+            Pkg.develop(PackageSpec(path=pwd()))
+            Pkg.instantiate()'
+      - name: Run doctests
+        run: |
+          julia --project=docs -e '
+            import Pkg; Pkg.add("Documenter")
+            using Documenter: doctest
+            using DenseGillespieAlgorithm
+            doctest(DenseGillespieAlgorithm)'
+      - name: Deploy documentation
+        run: julia --project=docs docs/make.jl
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # If authenticating with GitHub Actions token
-          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }} # If authenticating with SSH deploy key
-        run: julia --project=docs/ docs/make.jl
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
