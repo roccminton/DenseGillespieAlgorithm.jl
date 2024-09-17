@@ -65,6 +65,7 @@ With everything in place, it is time to run the simulations. To do this, call th
 
 ```@docs
 run_gillespie!
+```
 
 Once the simulation has reached its conclusion, the modified population history is returned for further analysis.
 
