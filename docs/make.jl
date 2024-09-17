@@ -6,6 +6,7 @@ using Documenter, DenseGillespieAlgorithm
 makedocs(sitename="DenseGillespieAlgorithm.jl Documentation",
          pages = [
             "DenseGillespieAlgorithm Package" => "DGAPackage.md",
+            "Examples" => "examples.md"
             "Index" => "index.md",
          ],
          format = Documenter.HTML(prettyurls = false)
