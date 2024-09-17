@@ -35,6 +35,7 @@ Run a exact stochastic simulation, return and fill the `population_history`.
     where the population history gets modified at position t with the current population state `n₀`.
 - Note that the `population_history` needs to be accessable via index from 1 to `length(time)`, or if `hstart` is given from `1+hstart` to `length(time)+hstart`. Unless a specified `statistic!` function is given.
 - Note that the initial population state `n₀` must match the `population_history` in the sense that `population_history :: Vector{typeof(n₀)}`.  Unless a specified `statistic!` function is given.
+- The parameter variable `par` is passed through all functions (`execute!,rates!,statistics!`), thereby affording the user additional flexibility.
 """
 function run_gillespie!(time,n₀,par,execute!::F1,rates!::F2,initrates,population_history;hstart=0,statistic!::F3 = saveonestep!) where {F1,F2,F3}
 
