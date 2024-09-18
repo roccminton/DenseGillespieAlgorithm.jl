@@ -101,7 +101,7 @@ In the context of adaptive dynamics models, individuals are characterised by a s
 
 For further insight into the subject of adaptive dynamics models, we would direct the reader to the [lecture notes](https://www.dropbox.com/scl/fi/8f0pdhq471unbla5dw5xh/LN_SMLS.pdf?rlkey=b0eodhvonuehueuancxeoqloz&st=eqd3ffwj&dl=0) by Anton Bovier.
 
-We present a specific case study of an adaptive dynamics model, originally proposed by Dieckmann and Doebeli[^Dieckmann99]. Here the trait space is ``\mathcal{X} = [-1,1] \subset \mathbb{R}``. The birth rate is given by ``b(x)=exp(-x^2/2\sigma^2_b`` for some ``\sigma_b > 0``. The death rate is constant ``d(x) = d`` and the competion between individuals depends only on theri distance by ``c(x,y)=exp(-(x-y)^2/2\sigma^2_c`` for some ``\sigma_c > 0``. Moreover the mutation kernel, that chooses the new trait of an offspring at birth is a Gaussian law with mean 0 and variance 0.1 conditioned to [-1,1].
+We present a specific case study of an adaptive dynamics model, originally proposed by Dieckmann and Doebeli[^Dieckmann99]. Here the trait space is ``\mathcal{X} = [-1,1] \subset \mathbb{R}``. The birth rate is given by ``b(x)=exp(-x^2/2\sigma^2_b)`` for some ``\sigma_b > 0``. The death rate is constant ``d(x) = d`` and the competion between individuals depends only on theri distance by ``c(x,y)=exp(-(x-y)^2/2\sigma^2_c)`` for some ``\sigma_c > 0``. Moreover the mutation kernel, that chooses the new trait of an offspring at birth is a Gaussian law with mean ``0`` and variance ``0.1`` conditioned to ``[-1,1]``.
 
 [^Dieckmann99]:U. Dieckmann, M. Doebeli, On the origin of species by sympatric speciation. _Nature_ 400:354-357, 1999
 
@@ -109,6 +109,8 @@ The next step is to begin the implementation of this model, starting with the ra
 
 
 ```julia
+using Distributions
+
 #birth rate
 b(x, σ) = exp(-x^2 / (2σ^2))
 #death rate
@@ -117,7 +119,6 @@ d(x,d) = d
 c(x, y, σ, K) = inv(K) * exp(-(x - y)^2 / (2σ^2))
 #mutation kernel
 mutation(x) = rand(truncated(Normal(x, 0.1), -1, 1))
-μ = 1/(K*log(K))
 
 ```
 
@@ -299,3 +300,15 @@ p
     It should be noted that the algorithm performs regular checks for subpopulations in the dictionary with a population size of zero. In the event that such subpopulations are identified, they are removed in order to prevent an excessive expansion of the dictionary. This process is carried out by the [`DenseGillespieAlgorithm.dropzeros!`](@ref) function.
 
 ## High-dimensional model
+The final example we will present is the most complex. We implement a model to analyse the dynamics of complete recessive lethal diseases. Each disease is triggered by the mutation of a gene and is expressed only in a homozygous state. Therefore, the traitspace for this model is ``\mathcal{X}=\{0,1\}^{2\times N}`` where ``N`` is the number of genes. A detailed description and results of numerous simulations with this exact framework can be found [here](https://arxiv.org/abs/2406.09094)[^LaRocca24].
+
+[^LaRocca24]:L. A. La Rocca, K. Gerischer, A. Bovier, and P. M. Krawitz. Refining the drift barrier hypothesis: a role of recessive gene count and an inhomogeneous muller's ratchet, 2024
+
+Individuals expressing a disease are excluded from the mating process. At birth, each individual randomly selects a fit partner from the population. Following the process of recombination, whereby the diploid genetic information is reduced to a haploid zygote incorporating crossover events, the gametes of the two parents fuse to form a new offspring. New mutations emerge at a constant rate. 
+
+Given that there are ``2^{2N}`` potential configurations with interactions between them, it is not feasible to enumerate them all prior to the start of the simulation. 
+Furthermore, it is of no particular interest to ascertain the precise genetic configuration of the entire population. Typically, one is only concerned with summary statistics, such as the mutation burden (the average number of mutations per individual) and the prevalence (the fraction of individuals affected by a disease).
+It is therefore only these statistics that will be retained for subsequent analysis. However, for the propagation of the population dynamics, it is essential to have access to the exact configurations.
+To be more precise, the total birth and death rates can be calculated via the summary statistics, which we utilise. However, in order to employ an offspring, the configurations are required.
+
+
