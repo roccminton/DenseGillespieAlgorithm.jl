@@ -9,7 +9,6 @@ DenseGillespieAlgorithm.jl is a Julia package designed for performing exact stoc
 ## Features
 
 - **Efficient Exact Stochastic Simulations**: Ideal for densely connected reaction networks.
-- **Modified Gillespie Algorithm**: Optimized for dense problems, reducing the computational complexity.
 - **Flexible**: Works for a variety of problem domains including chemical kinetics and population dynamics.
 
 ## Installation
