@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Examples · DenseGillespieAlgorithm.jl</title><meta name="title" content="Examples · DenseGillespieAlgorithm.jl"/><meta property="og:title" content="Examples · DenseGillespieAlgorithm.jl"/><meta property="twitter:title" content="Examples · DenseGillespieAlgorithm.jl"/><meta name="description" content="Documentation for DenseGillespieAlgorithm.jl."/><meta property="og:description" content="Documentation for DenseGillespieAlgorithm.jl."/><meta property="twitter:description" content="Documentation for DenseGillespieAlgorithm.jl."/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="DGAPackage.html">DenseGillespieAlgorithm.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="DGAPackage.html">Home</a></li><li><a class="tocitem" href="manual.html">Manual</a></li><li class="is-active"><a class="tocitem" href="examples.html">Examples</a><ul class="internal"><li><a class="tocitem" href="#SIR-Model"><span>SIR-Model</span></a></li><li><a class="tocitem" href="#Continuous-trait-space"><span>Continuous trait space</span></a></li><li><a class="tocitem" href="#High-dimensional-model"><span>High-dimensional model</span></a></li></ul></li><li><a class="tocitem" href="perform.html">Performance Tips</a></li><li><a class="tocitem" href="index.html">Public API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href="examples.html">Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="examples.html">Examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/roccminton/DenseGillespieAlgorithm.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/roccminton/DenseGillespieAlgorithm.jl/blob/main/docs/src/examples.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Examples"><a class="docs-heading-anchor" href="#Examples">Examples</a><a id="Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Examples" title="Permalink"></a></h1><p>Three illustrative examples are provided. The first is a minimal working example, designed to facilitate the initial implementation of the framework on the user&#39;s machine. The second is a slightly more advanced example, which illustrates the use of an uncountable trait space. The third is a highly complex example, which demonstrates the comprehensive versatility of the package.</p><h2 id="SIR-Model"><a class="docs-heading-anchor" href="#SIR-Model">SIR-Model</a><a id="SIR-Model-1"></a><a class="docs-heading-anchor-permalink" href="#SIR-Model" title="Permalink"></a></h2><p>The SIR model is a tree-dimensional model that is used to model infectious diseases. It is a simple model that assumes that individuals can be placed into one of three categories: susceptible, infected, or recovered. Infected individuals can infect susceptible individuals through random interactions. After becoming infected, individuals can recover and become immune. For more details, see for example <a href="https://people.wku.edu/lily.popova.zhuhadar/">here</a>.</p><p>The initial step is to implement the fundamental interaction functions. In this scenario, two events are occurring: infection and recovery. The objective is to implement these functions in a manner that modifies the population state, which is represented as a vector with three entries, one for each possible state of an individual.</p><pre><code class="language-julia hljs">using Plots
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Examples · DenseGillespieAlgorithm.jl</title><meta name="title" content="Examples · DenseGillespieAlgorithm.jl"/><meta property="og:title" content="Examples · DenseGillespieAlgorithm.jl"/><meta property="twitter:title" content="Examples · DenseGillespieAlgorithm.jl"/><meta name="description" content="Documentation for DenseGillespieAlgorithm.jl."/><meta property="og:description" content="Documentation for DenseGillespieAlgorithm.jl."/><meta property="twitter:description" content="Documentation for DenseGillespieAlgorithm.jl."/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="DGAPackage.html">DenseGillespieAlgorithm.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="DGAPackage.html">Home</a></li><li><a class="tocitem" href="manual.html">Manual</a></li><li class="is-active"><a class="tocitem" href="examples.html">Examples</a><ul class="internal"><li><a class="tocitem" href="#1.-SIR-Model"><span>1. SIR-Model</span></a></li><li><a class="tocitem" href="#2.-Continuous-trait-space"><span>2. Continuous trait space</span></a></li><li><a class="tocitem" href="#3.-High-dimensional-model"><span>3. High-dimensional model</span></a></li></ul></li><li><a class="tocitem" href="perform.html">Performance Tips</a></li><li><a class="tocitem" href="index.html">Public API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href="examples.html">Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="examples.html">Examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/roccminton/DenseGillespieAlgorithm.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/roccminton/DenseGillespieAlgorithm.jl/blob/main/docs/src/examples.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Examples"><a class="docs-heading-anchor" href="#Examples">Examples</a><a id="Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Examples" title="Permalink"></a></h1><p>Three illustrative examples are provided. The first is a minimal working example, designed to facilitate the initial implementation of the framework on the user&#39;s machine. The second is a slightly more advanced example, which illustrates the use of an uncountable trait space and caching for performance improvement in a particular use case. The third is a highly complex example, which demonstrates the comprehensive versatility of the package. </p><h2 id="1.-SIR-Model"><a class="docs-heading-anchor" href="#1.-SIR-Model">1. SIR-Model</a><a id="1.-SIR-Model-1"></a><a class="docs-heading-anchor-permalink" href="#1.-SIR-Model" title="Permalink"></a></h2><p>The SIR model is a tree-dimensional model that is used to model infectious diseases. It is a simple model that assumes that individuals can be placed into one of three categories: susceptible, infected, or recovered. Infected individuals can infect susceptible individuals through random interactions. After becoming infected, individuals can recover and become immune. For more details, see for example <a href="https://people.wku.edu/lily.popova.zhuhadar/">here</a>.</p><p>The initial step is to implement the fundamental interaction functions. In this scenario, two events are occurring: infection and recovery. The objective is to implement these functions in a manner that modifies the population state, which is represented as a vector with three entries, one for each possible state of an individual.</p><pre><code class="language-julia hljs">using Plots
 using DenseGillespieAlgorithm
 
 # Define the reactions
@@ -51,7 +51,7 @@ run_gillespie!(
         )
 
 # Analyze or plot the result (example with a simple print)
-plot(hist,label=[&quot;S&quot; &quot;I&quot; &quot;R&quot;])</code></pre><p><img src="https://roccminton.github.io/images/SIR.png" alt="SIR Plot"/></p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>While it is feasible to construct such straightforward examples using the DenseGillespieAlgorithm, this is not the typical application. For relatively simple models, the <a href="https://docs.sciml.ai/JumpProcesses/stable/">JumpProcess.jl</a> package offers greater flexibility and facilitates the implementation process.</p></div></div><h2 id="Continuous-trait-space"><a class="docs-heading-anchor" href="#Continuous-trait-space">Continuous trait space</a><a id="Continuous-trait-space-1"></a><a class="docs-heading-anchor-permalink" href="#Continuous-trait-space" title="Permalink"></a></h2><p>In this example, we consider an individual-based model of adaptive dynamics, wherein the trait space is a subset of the real line. It is therefore impossible to list all the types and interaction rates between them, as there are uncountably many. It is thus necessary to implement the rates and interactions in a dynamic manner. </p><p>In the context of adaptive dynamics models, individuals are characterised by a specific trait, which in this case is a real number. The mortality and fertility rates of individuals are contingent upon this trait. Moreover, competition among individuals is contingent upon the trait in question. Furthermore, at birth, with a probability of μ, the offspring undergoes a mutation and displays a distinct trait in comparison to its parents. </p><p>For further insight into the subject of adaptive dynamics models, we would direct the reader to the <a href="https://www.dropbox.com/scl/fi/8f0pdhq471unbla5dw5xh/LN_SMLS.pdf?rlkey=b0eodhvonuehueuancxeoqloz&amp;st=eqd3ffwj&amp;dl=0">lecture notes</a> by Anton Bovier.</p><p>We present a specific case study of an adaptive dynamics model, originally proposed by Dieckmann and Doebeli<sup class="footnote-reference"><a id="citeref-Dieckmann99" href="#footnote-Dieckmann99">[Dieckmann99]</a></sup>. Here the trait space is <span>$\mathcal{X} = [-1,1] \subset \mathbb{R}$</span>. The birth rate is given by <span>$b(x)=exp(-x^2/2\sigma^2_b)$</span> for some <span>$\sigma_b &gt; 0$</span>. The death rate is constant <span>$d(x) = d$</span> and the competion between individuals depends only on theri distance by <span>$c(x,y)=exp(-(x-y)^2/2\sigma^2_c)$</span> for some <span>$\sigma_c &gt; 0$</span>. Moreover the mutation kernel, that chooses the new trait of an offspring at birth is a Gaussian law with mean <span>$0$</span> and variance <span>$0.1$</span> conditioned to <span>$[-1,1]$</span>.</p><p>The next step is to begin the implementation of this model, starting with the rates function.</p><pre><code class="language-julia hljs">using Distributions
+plot(hist,label=[&quot;S&quot; &quot;I&quot; &quot;R&quot;])</code></pre><p><img src="https://roccminton.github.io/images/SIR.png" alt="SIR Plot"/></p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>While it is feasible to construct such straightforward examples using the DenseGillespieAlgorithm, this is not the typical application. For relatively simple models, the <a href="https://docs.sciml.ai/JumpProcesses/stable/">JumpProcess.jl</a> package offers greater flexibility and facilitates the implementation process.</p></div></div><h2 id="2.-Continuous-trait-space"><a class="docs-heading-anchor" href="#2.-Continuous-trait-space">2. Continuous trait space</a><a id="2.-Continuous-trait-space-1"></a><a class="docs-heading-anchor-permalink" href="#2.-Continuous-trait-space" title="Permalink"></a></h2><p>In this example, we consider an individual-based model of adaptive dynamics, wherein the trait space is a subset of the real line. It is therefore impossible to list all the types and interaction rates between them, as there are uncountably many. It is thus necessary to implement the rates and interactions in a dynamic manner. </p><p>In the context of adaptive dynamics models, individuals are characterised by a specific trait, which in this case is a real number. The mortality and fertility rates of individuals are contingent upon this trait. Moreover, competition among individuals is contingent upon the trait in question. Furthermore, at birth, with a probability of μ, the offspring undergoes a mutation and displays a distinct trait in comparison to its parents. </p><p>For further insight into the subject of adaptive dynamics models, we would direct the reader to the <a href="https://www.dropbox.com/scl/fi/8f0pdhq471unbla5dw5xh/LN_SMLS.pdf?rlkey=b0eodhvonuehueuancxeoqloz&amp;st=eqd3ffwj&amp;dl=0">lecture notes</a> by Anton Bovier.</p><p>We present a specific case study of an adaptive dynamics model, originally proposed by Dieckmann and Doebeli<sup class="footnote-reference"><a id="citeref-Dieckmann99" href="#footnote-Dieckmann99">[Dieckmann99]</a></sup>. Here the trait space is <span>$\mathcal{X} = [-1,1] \subset \mathbb{R}$</span>. The birth rate is given by <span>$b(x)=exp(-x^2/2\sigma^2_b)$</span> for some <span>$\sigma_b &gt; 0$</span>. The death rate is constant <span>$d(x) = d$</span> and the competion between individuals depends only on theri distance by <span>$c(x,y)=exp(-(x-y)^2/2\sigma^2_c)$</span> for some <span>$\sigma_c &gt; 0$</span>. Moreover the mutation kernel, that chooses the new trait of an offspring at birth is a Gaussian law with mean <span>$0$</span> and variance <span>$0.1$</span> conditioned to <span>$[-1,1]$</span>.</p><p>The next step is to begin the implementation of this model, starting with the rates function.</p><pre><code class="language-julia hljs">using Distributions
 
 #birth rate
 b(x, σ) = exp(-x^2 / (2σ^2))
@@ -95,7 +95,7 @@ par = (
         compdict = generatecompdict(n0,(x, y) -&gt; c(x, y, 0.8, 1000)),
         historylength = length(t)
 )</code></pre><div class="admonition is-info"><header class="admonition-header">History length</header><div class="admonition-body"><p>As the population history will be stored in the dictionary, it is necessary to inform the algorithm of the duration of the simulation. To this end, the field &quot;historylength&quot; must be added to the parameter variable.</p></div></div><p>The next step is to define the rates function. In this case, the rates are also provided as a dictionary. Each subpopulation has two rates: a birth rate and a death rate. These are calculated from the cache and written to the dictionary.</p><pre><code class="language-julia hljs">#define rates function
-function rates!(rates::Dict,ps::Dict,pr)
+function rates!(rates::Dict,ps::Dict,par)
     #iterate through current population
     for (x,vₓ) in ps
         #size of subpopulation
@@ -106,7 +106,7 @@ function rates!(rates::Dict,ps::Dict,pr)
         rates[x][1] = nₓ*vₓ[2]
         #deathrate n_x * (d(x) + Σ c(x,y) n_y)
         rates[x][2] = nₓ* vₓ[3]
-        for (traittuple,c) in pr.compdict
+        for (traittuple,c) in par.compdict
             t₁,t₂ = traittuple
             t₁ == x &amp;&amp; (rates[x][2] += nₓ * ps[t₂][1] * c)
         end
@@ -138,7 +138,7 @@ end</code></pre><p>The <code>birth!</code> and <code>death!</code> functions can
 end
 
 function death!(ps,trait,pr)
-    ps[trait][1] -= pr.diff
+    ps[trait][1] -= par.diff
 end
 
 function execute!(i,trait,ps,rates,pr)
@@ -186,4 +186,203 @@ for (x,his_x) in history
     plot!(p,time,his_x,color=cgrad(:thermal).colors.colors[c(x)])
 end
 
-p</code></pre><p><img src="https://roccminton.github.io/images/TSS.png" alt="Simulation result with a mutation rate of 1/K"/></p><div class="admonition is-warning"><header class="admonition-header">Mutation rate</header><div class="admonition-body"><p>In this scenario, the runtime of the algorithm is highly dependent on the mutation rate. An increase in the mutation rate results in a greater number of different traits. This implementation with dictionaries is most suited for a small number of traits being alive at the same time. However, if the mutation rate is increased to levels of frequent mutation, it is recommended that dictionaries are not used, but instead vectors should be employed for saving the data. The following example demonstrates this technique.</p></div></div><div class="admonition is-success"><header class="admonition-header">Population size</header><div class="admonition-body"><p>Nevertheless, increasing the population size in this scenario does not significantly prolong the runtime of the algorithm. This is an advantage of using dictionaries and caching the competition. However, this approach is only effective when the mutation rate is scaled with the population size (as demonstrated in the above example).</p></div></div><div class="admonition is-info"><header class="admonition-header">Empty cache</header><div class="admonition-body"><p>It should be noted that the algorithm performs regular checks for subpopulations in the dictionary with a population size of zero. In the event that such subpopulations are identified, they are removed in order to prevent an excessive expansion of the dictionary. This process is carried out by the <a href="index.html#DenseGillespieAlgorithm.dropzeros!-Tuple{Any}"><code>DenseGillespieAlgorithm.dropzeros!</code></a> function.</p></div></div><h2 id="High-dimensional-model"><a class="docs-heading-anchor" href="#High-dimensional-model">High-dimensional model</a><a id="High-dimensional-model-1"></a><a class="docs-heading-anchor-permalink" href="#High-dimensional-model" title="Permalink"></a></h2><p>The final example we will present is the most complex. We implement a model to analyse the dynamics of complete recessive lethal diseases. Each disease is triggered by the mutation of a gene and is expressed only in a homozygous state. Therefore, the traitspace for this model is <span>$\mathcal{X}=\{0,1\}^{2\times N}$</span> where <span>$N$</span> is the number of genes. A detailed description and results of numerous simulations with this exact framework can be found <a href="https://arxiv.org/abs/2406.09094">here</a><sup class="footnote-reference"><a id="citeref-LaRocca24" href="#footnote-LaRocca24">[LaRocca24]</a></sup>.</p><p>Individuals expressing a disease are excluded from the mating process. At birth, each individual randomly selects a fit partner from the population. Following the process of recombination, whereby the diploid genetic information is reduced to a haploid zygote incorporating crossover events, the gametes of the two parents fuse to form a new offspring. New mutations emerge at a constant rate. </p><p>Given that there are <span>$2^{2N}$</span> potential configurations with interactions between them, it is not feasible to enumerate them all prior to the start of the simulation.  Furthermore, it is of no particular interest to ascertain the precise genetic configuration of the entire population. Typically, one is only concerned with summary statistics, such as the mutation burden (the average number of mutations per individual) and the prevalence (the fraction of individuals affected by a disease). It is therefore only these statistics that will be retained for subsequent analysis. However, for the propagation of the population dynamics, it is essential to have access to the exact configurations. To be more precise, the total birth and death rates can be calculated via the summary statistics, which we utilise. However, in order to employ an offspring, the configurations are required.</p><section class="footnotes is-size-7"><ul><li class="footnote" id="footnote-Dieckmann99"><a class="tag is-link" href="#citeref-Dieckmann99">Dieckmann99</a>U. Dieckmann, M. Doebeli, On the origin of species by sympatric speciation. <em>Nature</em> 400:354-357, 1999</li><li class="footnote" id="footnote-LaRocca24"><a class="tag is-link" href="#citeref-LaRocca24">LaRocca24</a>L. A. La Rocca, K. Gerischer, A. Bovier, and P. M. Krawitz. Refining the drift barrier hypothesis: a role of recessive gene count and an inhomogeneous muller&#39;s ratchet, 2024</li></ul></section></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="manual.html">« Manual</a><a class="docs-footer-nextpage" href="perform.html">Performance Tips »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Wednesday 18 September 2024 10:12">Wednesday 18 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+p</code></pre><p><img src="https://roccminton.github.io/images/TSS.png" alt="Simulation result with a mutation rate of 1/K"/> Simulation results with a mutation rate of <span>$1/K$</span> where <span>$K$</span> is the carrying capacity.</p><div class="admonition is-warning"><header class="admonition-header">Mutation rate</header><div class="admonition-body"><p>In this scenario, the runtime of the algorithm is highly dependent on the mutation rate. An increase in the mutation rate results in a greater number of different traits. This implementation with dictionaries is most suited for a small number of traits being alive at the same time. However, if the mutation rate is increased to levels of frequent mutation, it is recommended that dictionaries are not used, but instead vectors should be employed for saving the data. The following example demonstrates this technique.</p></div></div><div class="admonition is-success"><header class="admonition-header">Population size</header><div class="admonition-body"><p>Nevertheless, increasing the population size in this scenario does not significantly prolong the runtime of the algorithm. This is an advantage of using dictionaries and caching the competition. However, this approach is only effective when the mutation rate is scaled with the population size (as demonstrated in the above example).</p></div></div><div class="admonition is-info"><header class="admonition-header">Empty cache</header><div class="admonition-body"><p>It should be noted that the algorithm performs regular checks for subpopulations in the dictionary with a population size of zero. In the event that such subpopulations are identified, they are removed in order to prevent an excessive expansion of the dictionary. This process is carried out by the <a href="index.html#DenseGillespieAlgorithm.dropzeros!-Tuple{Any}"><code>DenseGillespieAlgorithm.dropzeros!</code></a> function.</p></div></div><div class="admonition is-info"><header class="admonition-header">Switch-off caching</header><div class="admonition-body"><p>It is possible to implement the same dynamics without the caching of competition rates. In this case, the only necessary modification is to alter the <code>for</code>-loop in the <code>rates!</code> function, which iterates over all pairs of tuples to</p><pre><code class="language-julia hljs">for t₁ in keys(ps)
+    rates[x][2] += nₓ * ps[t₁][1] * par.competition(x,t₁)
+end</code></pre></div></div><p>and delete the <code>for</code>-loop over all other traits in the <code>addnewtrait!</code> function. In instances where the number of distinct traits is considerable, this approach is advised.</p><h2 id="3.-High-dimensional-model"><a class="docs-heading-anchor" href="#3.-High-dimensional-model">3. High-dimensional model</a><a id="3.-High-dimensional-model-1"></a><a class="docs-heading-anchor-permalink" href="#3.-High-dimensional-model" title="Permalink"></a></h2><p>The final example we will present is the most complex. We implement a model to analyse the dynamics of complete recessive lethal diseases. Each disease is triggered by the mutation of a gene and is expressed only in a homozygous state. Therefore, the traitspace for this model is <span>$\mathcal{X}=\{0,1\}^{2\times N}$</span> where <span>$N$</span> is the number of genes. A detailed description and results of numerous simulations with this exact framework can be found <a href="https://arxiv.org/abs/2406.09094">here</a><sup class="footnote-reference"><a id="citeref-LaRocca24" href="#footnote-LaRocca24">[LaRocca24]</a></sup>.</p><p>Individuals expressing a disease are excluded from the mating process. At birth, each individual randomly selects a fit partner from the population. Following the process of recombination, whereby the diploid genetic information is reduced to a haploid zygote incorporating crossover events, the gametes of the two parents fuse to form a new offspring. New mutations emerge at a constant rate.  It is assumed that the intrinsic death rate and the competition among all individuals are identical. Only the birth rate is reduced to zero for infected individuals.</p><p>Given that there are <span>$2^{2N}$</span> potential configurations with interactions between them, it is not feasible to enumerate them all prior to the start of the simulation.  Furthermore, it is of no particular interest to ascertain the precise genetic configuration of the entire population. Typically, one is only concerned with summary statistics, such as the mutation burden (the average number of mutations per individual) and the prevalence (the fraction of individuals affected by a disease). It is therefore only these statistics that will be retained for subsequent analysis. However, for the propagation of the population dynamics, it is essential to have access to the exact configurations. To be more precise, the total birth and death rates can be calculated via the summary statistics, which we utilise. However, in order to employ an offspring, the configurations are required.</p><p>In order to enhance the efficacy of the algorithm, it is essential to make extensive use of the parameter variable, which is passed to all relevant functions. The intrinsic configuration is stored therein in an optimal way, while the population state encompasses only the summary statistics and the total population size, as these are the necessary components for computing the event rates.</p><p>The initial stage of the process entails the establishment of all model-specific parameters, including the constant birth, death, and competition rates; the expected number of mutations at birth, denoted by μ; the number of recessive genes; the initial population size; and the recombination rate.</p><pre><code class="language-julia hljs">using SparseArrays
+using Random
+
+t = 0:1000
+
+par = (
+    birth = 1.0,
+    death = 0.9,
+    competition = 0.1 / 1000,
+    μ = 0.1,
+    Nloci = 100,
+    K = 1000,
+    recombination = 0.01
+)
+
+n0 = Dict(
+    &quot;PopSize&quot; =&gt; par.K,
+    &quot;Ill&quot; =&gt; 0,
+    &quot;ML&quot; =&gt; 0
+)</code></pre><p>The only two possible events are birth and death, the <code>rates!</code> function can be expressed as follows: </p><pre><code class="language-julia hljs">function rates!(rates, ps, par)
+    #linear birth for all propagable individuals
+    rates[1] = par.birth * (ps[&quot;PopSize&quot;]-ps[&quot;Ill&quot;])
+    #uniform logistic death
+    rates[2] = ps[&quot;PopSize&quot;] * par.death + ps[&quot;PopSize&quot;] * (ps[&quot;PopSize&quot;] - 1) * par.competition
+    nothing
+end</code></pre><p>The definition of the function that executes the birth is a more challenging undertaking, given that it involves three mechanisms: mating, recombination and mutation.  Nevertheless, prior to an explication of the implementation of the execute! function, it is necessary to describe the means by which the population configuration is saved internally. Since the size of any given trait is relatively large (<span>$2N$</span> bytes), and since we anticipate a significant number of different traits, but a limited population size, we have chosen to construct a vector of traits that is as large as the expected population size, with additional space for fluctuations. This vector will store all the traits. Furthermore, a dictionary of indices is maintained, which points to the indices of traits in the vector. The dictionary differentiates between traits that are either alive and healthy, or alive but ill (thus expressing the disease and unable to reproduce), or that are not part of the current population. The aforementioned free traits can then be modified if new offsprings are born, eliminating the necessity of initiating a new <span>$2 \times N$</span> matrix of <code>Bool</code>s each time. This method allows for the saving of a considerable amount of memory. The production of new traits is dependent upon the absence of free indices. Upon the death of a fey individual, the index is released into the group of free indices, where it may be reborn as a new trait at a future point in time. In order to initiate the trait vector, which encompasses all individual genetic configurations, we have implemented a function that takes the initial population state as an input and draws a possible trait configuration from it. </p><pre><code class="language-julia hljs">#empty genetic configuration
+emptytraits(Nloci,T=Bool) = [spzeros(T,Nloci),spzeros(T,Nloci)]
+
+#produce trait collection from population state
+function inittraits(par,n0)
+    #Setup healthy genetic information
+    locs = 1:par.Nloci
+    #Generate healty population with some buffer for fluctuations
+    traits = [emptytraits(par.Nloci) for _ in 1:round(Int,par.K + sqrt(par.K))]
+    #add two mutations to completely healthy individuals to get the required number of ill individuals
+    for i in 1:n0[&quot;Ill&quot;]
+        l = rand(locs)
+        traits[i][1][l] = 1
+        traits[i][2][l] = 1
+    end
+    individuals = 1:n0[&quot;PopSize&quot;]
+    #add the remaining mutaions to the population to get the required mutation load
+    for i in n0[&quot;Ill&quot;]+1:n0[&quot;ML&quot;]-2*n0[&quot;Ill&quot;]
+        #choose random individual and location
+        ind = rand(individuals)
+        l = rand(locs)
+        #recoose random individual and location if the individual has already a mutation
+        #at that locationo or at the homologe gene
+        while traits[ind][1][l]+traits[ind][2][l] ≠ 0
+            ind = rand(individuals)
+            l = rand(locs)
+        end
+        traits[ind][rand(par.choosecopyfrom)][l] = 1
+    end
+    return traits
+end</code></pre><p>Subsequently, both the traits and the corresponding index dictionary are incorporated into the parameter variable. Additionally, other necessary elements are included, allowing for their reuse rather than generation on each occasion. These include a vector of random numbers for mate selection, the mutation distribution, the distribution of mutation locations and a unit range for gene segment selection.</p><pre><code class="language-julia hljs">par = (par...,
+    rndm = Vector{Int}(undef,2),
+    MutationsPerBirth = Poisson(par.μ),
+    MutationLocation = 1:par.Nloci,
+    traits = inittraits(par,n0),
+    indices = Dict(
+        &quot;healthy&quot; =&gt; collect(n0[&quot;Ill&quot;]+1:n0[&quot;PopSize&quot;]),
+        &quot;ill&quot; =&gt; collect(1:n0[&quot;Ill&quot;]),
+        &quot;free&quot; =&gt; collect(n0[&quot;PopSize&quot;]+1:round(Int,par.K + sqrt(par.K)))
+    ),
+    historylength = length(t),
+    choosecopyfrom = 1:2,
+)</code></pre><p>The initial step on implementing the <code>birth!</code> function is to implement a function that establishes the crossover breakpoints for recombination at random, in accordance with the specified recombination rate. The function initially draws the number of crossover breakpoints from a <em>Poisson</em> distribution, and subsequently selects the position at random from among all <span>$N-1$</span> positions. The resulting vector of <code>UnitRange</code> segments is then returned.</p><pre><code class="language-julia hljs">#output for recombination rate 1
+fullreccuts(par) = [i:i for i in 1:par.Nloci]
+#output for recombination rate 0
+noreccuts(par) = [1:par.Nloci]
+
+function reccuts(par)
+    if par.recombination == 1
+        return fullreccuts(par)
+    elseif par.recombination == 0
+        return noreccuts(par)
+    else
+        #draw number of chromosome cuts
+        ncuts = rand(Poisson(par.recombination*par.Nloci))
+        #equals full recombination
+        ncuts ≥ par.Nloci - 1 &amp;&amp; return fullreccuts(par)
+        #equals no recombination
+        iszero(ncuts) &amp;&amp; return noreccuts(par)
+        #otherwise produce individual segments at random
+        cutsat = sort!(sample(1:par.Nloci-1,ncuts,replace=false))
+        ccuts = [1:cutsat[1]]
+        for i in 2:length(cutsat)
+            push!(ccuts,cutsat[i-1]+1:cutsat[i])
+        end
+        push!(ccuts,cutsat[end]+1:par.Nloci)
+        return ccuts
+    end
+end</code></pre><p>Subsequently, once two parents have been identified for mating, the process of the offspring generation is defined. This encompasses recombination, mating and mutation. The new genetic configuration of the offspring is stored at a designated index.</p><pre><code class="language-julia hljs">function offspring!(offspring_index, par, n_mut)
+    #randomly recombine the parental genetic information
+    #first for one then for the other parent
+    for i in par.choosecopyfrom # =1:2
+        #randomly choose one copy for each chromosome/gene block
+        ccuts = reccuts(par)
+        choosecopy = rand(par.choosecopyfrom,length(ccuts))
+        for (r,chromosome) in enumerate(ccuts)
+            view(par.traits[offspring_index][i],chromosome) .=
+                view(par.traits[par.rndm[i]][choosecopy[r]],chromosome)
+        end
+    end
+    #add n_mut mutations to random positions mutation
+    #if there are no mutations to add skip the mutation process
+    if n_mut &gt; 0
+        for _ in 1:n_mut
+            par.traits[offspring_index][rand(par.choosecopyfrom)][rand(par.MutationLocation)] = 1
+        end
+    end
+    nothing
+end</code></pre><p>The final step before integrating all components into a unified system is to implement a function that updates the population state following the generation of the offspring&#39;s genetic configuration.It is therefore necessary to ascertain whether the offspring in question exhibits a mutation in a homogeneous state, which would render it unsuitable for reproduction. Furthermore, the mutation burden of the offspring must be calculated.</p><pre><code class="language-julia hljs">#check if configuration has homogeneous mutation
+ispropagable(a::Vector,Nloci) = ispropagable(a)
+function ispropagable(a::Vector)
+    for (i,p) in enumerate(a[1])
+        isone(p) &amp;&amp; isone(a[2][i]) &amp;&amp; return false
+    end
+    return true
+end
+#calculate mutation load
+mutationload(a::Vector) = sum(sum(svec) for svec in a)
+#modify population state at birth of offspring
+function updateps_birth!(ps,par,offspring_index)
+    if ispropagable(par.traits[offspring_index],par.Nloci)
+        push!(par.indices[&quot;healthy&quot;],offspring_index)
+    else
+        ps[&quot;Ill&quot;] += 1
+        push!(par.indices[&quot;ill&quot;],offspring_index)
+    end
+    ps[&quot;PopSize&quot;] += 1
+    ps[&quot;ML&quot;] += mutationload(par.traits[offspring_index])
+end</code></pre><p>The aforementioned processes are unified in the <code>birth!</code> function, which initially identifies potential parents for mating, subsequently generates offspring, and finally updates the population state. </p><pre><code class="language-julia hljs">#execute the addition of an individual
+function birth!(ps, par)
+    #choose two genetic configurations to mate
+    rand!(par.rndm,par.indices[&quot;healthy&quot;])
+    #clean up parental configurations
+    for i in par.choosecopyfrom, j in par.choosecopyfrom
+        dropzeros!(par.traits[par.rndm[i]][j])
+    end
+    #select free index for offspring
+    if isempty(par.indices[&quot;free&quot;])
+        offspring_index = length(par.traits) + 1
+        push!(par.traits,emptytraits(par.Nloci))
+    else
+        offspring_index = pop!(par.indices[&quot;free&quot;])
+    end
+    #generate offsprings genetic configuration
+    offspring!(offspring_index, par, rand(par.MutationsPerBirth))
+    #add the individual to the current population state dictionary
+    updateps_birth!(ps,par,offspring_index)
+end</code></pre><p>The removal of an individual at death is a relatively straightforward process. It merely entails freeing the index and updating the population state in accordance with the relevant changes.</p><pre><code class="language-julia hljs">#modify population state at death of an individual
+function updateps_death!(ps,par,fey_index)
+    ps[&quot;PopSize&quot;] -= 1
+    ps[&quot;ML&quot;] -= mutationload(par.traits[fey_index])
+end
+#execute the removal of an individual
+function death!(ps, par)
+    #choose fey
+    if rand()&lt;=ps[&quot;Ill&quot;]/ps[&quot;PopSize&quot;]
+        fey_index = popat!(par.indices[&quot;ill&quot;],rand(1:ps[&quot;Ill&quot;]))
+        ps[&quot;Ill&quot;] -= 1
+    else
+        fey_index = popat!(par.indices[&quot;healthy&quot;],rand(1:(ps[&quot;PopSize&quot;]-ps[&quot;Ill&quot;])))
+    end
+    #add fey to gravejard
+    push!(par.indices[&quot;free&quot;],fey_index)
+    #update population state
+    updateps_death!(ps,par,fey_index)
+end</code></pre><p>As in the preceding cases, it is necessary to collate both the <code>birth!</code> and <code>death!</code> functions into a single <code>execute!</code> function.</p><pre><code class="language-julia hljs">function execute!(i,ps,par)
+    if i == 1
+        birth!(ps,par)
+    elseif i == 2
+        death!(ps,par)
+    else
+        error(&quot;Unknown event index: $i&quot;)
+    end
+end</code></pre><p>Finally, the simulation can be executed following the initialisation of both a blank rates vector and a blank population history.</p><pre><code class="language-julia hljs">#setup empty rates vector
+initrates = Vector{typeof(par.birth)}(undef,2)
+
+#setup empty population history
+hist = Dict(x=&gt;zeros(valtype(n0),length(t)) for x in keys(n0))
+
+run_gillespie!(
+        t,n0,
+        par,
+        execute!,
+        rates!,
+        initrates,
+        hist
+        )</code></pre><p>In order to facilitate the analysis of the data, we present a straightforward graphical representation.</p><pre><code class="language-julia hljs">using Plots
+#plot the prevalence
+plot(t,hist[&quot;Ill&quot;] ./ hist[&quot;PopSize&quot;],color=:orange,label=&quot;&quot;)
+#plot the population size (without axis ticks)
+plot!(twinx(),hist[&quot;PopSize&quot;],color=:gray,yticks=false,label=&quot;&quot;)
+#plot the mutation burden
+plot!(twinx(),hist[&quot;ML&quot;] ./ hist[&quot;PopSize&quot;],color=:red,label=&quot;&quot;)</code></pre><div class="admonition is-warning"><header class="admonition-header">Population extinction</header><div class="admonition-body"><p>In the event of the population becoming extinct, the aforementioned method will result in an error, as the division of zero will occur. To circumvent this issue, it is recommended to first invoke the following function on the data set.</p><pre><code class="language-julia hljs">replace_NaN(v) = map(x -&gt; isnan(x) ? zero(x) : x, v)</code></pre></div></div><p><img src="https://roccminton.github.io/images/MLP.png" alt="Simulation result showing the mutation load, prevalence and population size"/> The grey line represents the population size, which is not represented by any axis. On the left y-axis, the prevalence is represented by the yellow line, while the mutation burden is shown by the red line on the right y-axis.</p><h3 id="Custom-statistic!-function"><a class="docs-heading-anchor" href="#Custom-statistic!-function">Custom <code>statistic!</code> function</a><a id="Custom-statistic!-function-1"></a><a class="docs-heading-anchor-permalink" href="#Custom-statistic!-function" title="Permalink"></a></h3><section class="footnotes is-size-7"><ul><li class="footnote" id="footnote-Dieckmann99"><a class="tag is-link" href="#citeref-Dieckmann99">Dieckmann99</a>U. Dieckmann, M. Doebeli, On the origin of species by sympatric speciation. <em>Nature</em> 400:354-357, 1999</li><li class="footnote" id="footnote-LaRocca24"><a class="tag is-link" href="#citeref-LaRocca24">LaRocca24</a>L. A. La Rocca, K. Gerischer, A. Bovier, and P. M. Krawitz. Refining the drift barrier hypothesis: a role of recessive gene count and an inhomogeneous muller&#39;s ratchet, 2024</li></ul></section></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="manual.html">« Manual</a><a class="docs-footer-nextpage" href="perform.html">Performance Tips »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Wednesday 18 September 2024 14:36">Wednesday 18 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
