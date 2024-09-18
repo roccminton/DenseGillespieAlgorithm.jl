@@ -1,8 +1,8 @@
 # Examples
 
-Three illustrative examples are provided. The first is a minimal working example, designed to facilitate the initial implementation of the framework on the user's machine. The second is a slightly more advanced example, which illustrates the use of an uncountable trait space. The third is a highly complex example, which demonstrates the comprehensive versatility of the package.
+Three illustrative examples are provided. The first is a minimal working example, designed to facilitate the initial implementation of the framework on the user's machine. The second is a slightly more advanced example, which illustrates the use of an uncountable trait space and caching for performance improvement in a particular use case. The third is a highly complex example, which demonstrates the comprehensive versatility of the package. 
 
-## SIR-Model
+## 1. SIR-Model
 
 The SIR model is a tree-dimensional model that is used to model infectious diseases. It is a simple model that assumes that individuals can be placed into one of three categories: susceptible, infected, or recovered. Infected individuals can infect susceptible individuals through random interactions. After becoming infected, individuals can recover and become immune. For more details, see for example [here](https://people.wku.edu/lily.popova.zhuhadar/).
 
@@ -93,7 +93,7 @@ plot(hist,label=["S" "I" "R"])
 !!! note "Note"
     While it is feasible to construct such straightforward examples using the DenseGillespieAlgorithm, this is not the typical application. For relatively simple models, the [JumpProcess.jl](https://docs.sciml.ai/JumpProcesses/stable/) package offers greater flexibility and facilitates the implementation process.
 
-## Continuous trait space
+## 2. Continuous trait space
 In this example, we consider an individual-based model of adaptive dynamics, wherein the trait space is a subset of the real line.
 It is therefore impossible to list all the types and interaction rates between them, as there are uncountably many. It is thus necessary to implement the rates and interactions in a dynamic manner. 
 
@@ -178,7 +178,7 @@ The next step is to define the rates function. In this case, the rates are also 
 
 ```julia
 #define rates function
-function rates!(rates::Dict,ps::Dict,pr)
+function rates!(rates::Dict,ps::Dict,par)
     #iterate through current population
     for (x,vₓ) in ps
         #size of subpopulation
@@ -189,7 +189,7 @@ function rates!(rates::Dict,ps::Dict,pr)
         rates[x][1] = nₓ*vₓ[2]
         #deathrate n_x * (d(x) + Σ c(x,y) n_y)
         rates[x][2] = nₓ* vₓ[3]
-        for (traittuple,c) in pr.compdict
+        for (traittuple,c) in par.compdict
             t₁,t₂ = traittuple
             t₁ == x && (rates[x][2] += nₓ * ps[t₂][1] * c)
         end
@@ -230,7 +230,7 @@ function birth!(ps, rates, par, trait)
 end
 
 function death!(ps,trait,pr)
-    ps[trait][1] -= pr.diff
+    ps[trait][1] -= par.diff
 end
 
 function execute!(i,trait,ps,rates,pr)
@@ -289,6 +289,7 @@ end
 p
 ```
 ![Simulation result with a mutation rate of 1/K](https://roccminton.github.io/images/TSS.png)
+Simulation results with a mutation rate of ``1/K`` where ``K`` is the carrying capacity.
 
 !!! warning "Mutation rate"
     In this scenario, the runtime of the algorithm is highly dependent on the mutation rate. An increase in the mutation rate results in a greater number of different traits. This implementation with dictionaries is most suited for a small number of traits being alive at the same time. However, if the mutation rate is increased to levels of frequent mutation, it is recommended that dictionaries are not used, but instead vectors should be employed for saving the data. The following example demonstrates this technique.
@@ -299,16 +300,290 @@ p
 !!! info "Empty cache"
     It should be noted that the algorithm performs regular checks for subpopulations in the dictionary with a population size of zero. In the event that such subpopulations are identified, they are removed in order to prevent an excessive expansion of the dictionary. This process is carried out by the [`DenseGillespieAlgorithm.dropzeros!`](@ref) function.
 
-## High-dimensional model
+!!! info "Switch-off caching"
+    It is possible to implement the same dynamics without the caching of competition rates. In this case, the only necessary modification is to alter the `for`-loop in the `rates!` function, which iterates over all pairs of tuples to
+    ```julia
+    for t₁ in keys(ps)
+        rates[x][2] += nₓ * ps[t₁][1] * par.competition(x,t₁)
+    end
+    ```
+and delete the `for`-loop over all other traits in the `addnewtrait!` function. In instances where the number of distinct traits is considerable, this approach is advised.
+
+## 3. High-dimensional model
 The final example we will present is the most complex. We implement a model to analyse the dynamics of complete recessive lethal diseases. Each disease is triggered by the mutation of a gene and is expressed only in a homozygous state. Therefore, the traitspace for this model is ``\mathcal{X}=\{0,1\}^{2\times N}`` where ``N`` is the number of genes. A detailed description and results of numerous simulations with this exact framework can be found [here](https://arxiv.org/abs/2406.09094)[^LaRocca24].
 
 [^LaRocca24]:L. A. La Rocca, K. Gerischer, A. Bovier, and P. M. Krawitz. Refining the drift barrier hypothesis: a role of recessive gene count and an inhomogeneous muller's ratchet, 2024
 
 Individuals expressing a disease are excluded from the mating process. At birth, each individual randomly selects a fit partner from the population. Following the process of recombination, whereby the diploid genetic information is reduced to a haploid zygote incorporating crossover events, the gametes of the two parents fuse to form a new offspring. New mutations emerge at a constant rate. 
+It is assumed that the intrinsic death rate and the competition among all individuals are identical. Only the birth rate is reduced to zero for infected individuals.
 
 Given that there are ``2^{2N}`` potential configurations with interactions between them, it is not feasible to enumerate them all prior to the start of the simulation. 
 Furthermore, it is of no particular interest to ascertain the precise genetic configuration of the entire population. Typically, one is only concerned with summary statistics, such as the mutation burden (the average number of mutations per individual) and the prevalence (the fraction of individuals affected by a disease).
 It is therefore only these statistics that will be retained for subsequent analysis. However, for the propagation of the population dynamics, it is essential to have access to the exact configurations.
 To be more precise, the total birth and death rates can be calculated via the summary statistics, which we utilise. However, in order to employ an offspring, the configurations are required.
 
+In order to enhance the efficacy of the algorithm, it is essential to make extensive use of the parameter variable, which is passed to all relevant functions. The intrinsic configuration is stored therein in an optimal way, while the population state encompasses only the summary statistics and the total population size, as these are the necessary components for computing the event rates.
+
+The initial stage of the process entails the establishment of all model-specific parameters, including the constant birth, death, and competition rates; the expected number of mutations at birth, denoted by μ; the number of recessive genes; the initial population size; and the recombination rate.
+
+```julia
+using SparseArrays
+using Random
+
+t = 0:1000
+
+par = (
+    birth = 1.0,
+    death = 0.9,
+    competition = 0.1 / 1000,
+    μ = 0.1,
+    Nloci = 100,
+    K = 1000,
+    recombination = 0.01
+)
+
+n0 = Dict(
+    "PopSize" => par.K,
+    "Ill" => 0,
+    "ML" => 0
+)
+```
+
+The only two possible events are birth and death, the `rates!` function can be expressed as follows: 
+
+```julia
+function rates!(rates, ps, par)
+    #linear birth for all propagable individuals
+    rates[1] = par.birth * (ps["PopSize"]-ps["Ill"])
+    #uniform logistic death
+    rates[2] = ps["PopSize"] * par.death + ps["PopSize"] * (ps["PopSize"] - 1) * par.competition
+    nothing
+end
+```
+The definition of the function that executes the birth is a more challenging undertaking, given that it involves three mechanisms: mating, recombination and mutation. 
+Nevertheless, prior to an explication of the implementation of the execute! function, it is necessary to describe the means by which the population configuration is saved internally.
+Since the size of any given trait is relatively large (``2N`` bytes), and since we anticipate a significant number of different traits, but a limited population size, we have chosen to construct a vector of traits that is as large as the expected population size, with additional space for fluctuations. This vector will store all the traits. Furthermore, a dictionary of indices is maintained, which points to the indices of traits in the vector. The dictionary differentiates between traits that are either alive and healthy, or alive but ill (thus expressing the disease and unable to reproduce), or that are not part of the current population. The aforementioned free traits can then be modified if new offsprings are born, eliminating the necessity of initiating a new ``2 \times N`` matrix of `Bool`s each time. This method allows for the saving of a considerable amount of memory.
+The production of new traits is dependent upon the absence of free indices. Upon the death of a fey individual, the index is released into the group of free indices, where it may be reborn as a new trait at a future point in time.
+In order to initiate the trait vector, which encompasses all individual genetic configurations, we have implemented a function that takes the initial population state as an input and draws a possible trait configuration from it. 
+```julia
+#empty genetic configuration
+emptytraits(Nloci,T=Bool) = [spzeros(T,Nloci),spzeros(T,Nloci)]
+
+#produce trait collection from population state
+function inittraits(par,n0)
+    #Setup healthy genetic information
+    locs = 1:par.Nloci
+    #Generate healty population with some buffer for fluctuations
+    traits = [emptytraits(par.Nloci) for _ in 1:round(Int,par.K + sqrt(par.K))]
+    #add two mutations to completely healthy individuals to get the required number of ill individuals
+    for i in 1:n0["Ill"]
+        l = rand(locs)
+        traits[i][1][l] = 1
+        traits[i][2][l] = 1
+    end
+    individuals = 1:n0["PopSize"]
+    #add the remaining mutaions to the population to get the required mutation load
+    for i in n0["Ill"]+1:n0["ML"]-2*n0["Ill"]
+        #choose random individual and location
+        ind = rand(individuals)
+        l = rand(locs)
+        #recoose random individual and location if the individual has already a mutation
+        #at that locationo or at the homologe gene
+        while traits[ind][1][l]+traits[ind][2][l] ≠ 0
+            ind = rand(individuals)
+            l = rand(locs)
+        end
+        traits[ind][rand(par.choosecopyfrom)][l] = 1
+    end
+    return traits
+end
+```
+Subsequently, both the traits and the corresponding index dictionary are incorporated into the parameter variable. Additionally, other necessary elements are included, allowing for their reuse rather than generation on each occasion. These include a vector of random numbers for mate selection, the mutation distribution, the distribution of mutation locations and a unit range for gene segment selection.
+```julia
+par = (par...,
+    rndm = Vector{Int}(undef,2),
+    MutationsPerBirth = Poisson(par.μ),
+    MutationLocation = 1:par.Nloci,
+    traits = inittraits(par,n0),
+    indices = Dict(
+        "healthy" => collect(n0["Ill"]+1:n0["PopSize"]),
+        "ill" => collect(1:n0["Ill"]),
+        "free" => collect(n0["PopSize"]+1:round(Int,par.K + sqrt(par.K)))
+    ),
+    historylength = length(t),
+    choosecopyfrom = 1:2,
+)
+```
+The initial step on implementing the `birth!` function is to implement a function that establishes the crossover breakpoints for recombination at random, in accordance with the specified recombination rate. The function initially draws the number of crossover breakpoints from a _Poisson_ distribution, and subsequently selects the position at random from among all ``N-1`` positions. The resulting vector of `UnitRange` segments is then returned.
+
+```julia
+#output for recombination rate 1
+fullreccuts(par) = [i:i for i in 1:par.Nloci]
+#output for recombination rate 0
+noreccuts(par) = [1:par.Nloci]
+
+function reccuts(par)
+    if par.recombination == 1
+        return fullreccuts(par)
+    elseif par.recombination == 0
+        return noreccuts(par)
+    else
+        #draw number of chromosome cuts
+        ncuts = rand(Poisson(par.recombination*par.Nloci))
+        #equals full recombination
+        ncuts ≥ par.Nloci - 1 && return fullreccuts(par)
+        #equals no recombination
+        iszero(ncuts) && return noreccuts(par)
+        #otherwise produce individual segments at random
+        cutsat = sort!(sample(1:par.Nloci-1,ncuts,replace=false))
+        ccuts = [1:cutsat[1]]
+        for i in 2:length(cutsat)
+            push!(ccuts,cutsat[i-1]+1:cutsat[i])
+        end
+        push!(ccuts,cutsat[end]+1:par.Nloci)
+        return ccuts
+    end
+end
+```
+Subsequently, once two parents have been identified for mating, the process of the offspring generation is defined. This encompasses recombination, mating and mutation. The new genetic configuration of the offspring is stored at a designated index.
+```julia
+function offspring!(offspring_index, par, n_mut)
+    #randomly recombine the parental genetic information
+    #first for one then for the other parent
+    for i in par.choosecopyfrom # =1:2
+        #randomly choose one copy for each chromosome/gene block
+        ccuts = reccuts(par)
+        choosecopy = rand(par.choosecopyfrom,length(ccuts))
+        for (r,chromosome) in enumerate(ccuts)
+            view(par.traits[offspring_index][i],chromosome) .=
+                view(par.traits[par.rndm[i]][choosecopy[r]],chromosome)
+        end
+    end
+    #add n_mut mutations to random positions mutation
+    #if there are no mutations to add skip the mutation process
+    if n_mut > 0
+        for _ in 1:n_mut
+            par.traits[offspring_index][rand(par.choosecopyfrom)][rand(par.MutationLocation)] = 1
+        end
+    end
+    nothing
+end
+```
+The final step before integrating all components into a unified system is to implement a function that updates the population state following the generation of the offspring's genetic configuration.It is therefore necessary to ascertain whether the offspring in question exhibits a mutation in a homogeneous state, which would render it unsuitable for reproduction. Furthermore, the mutation burden of the offspring must be calculated.
+```julia
+#check if configuration has homogeneous mutation
+ispropagable(a::Vector,Nloci) = ispropagable(a)
+function ispropagable(a::Vector)
+    for (i,p) in enumerate(a[1])
+        isone(p) && isone(a[2][i]) && return false
+    end
+    return true
+end
+#calculate mutation load
+mutationload(a::Vector) = sum(sum(svec) for svec in a)
+#modify population state at birth of offspring
+function updateps_birth!(ps,par,offspring_index)
+    if ispropagable(par.traits[offspring_index],par.Nloci)
+        push!(par.indices["healthy"],offspring_index)
+    else
+        ps["Ill"] += 1
+        push!(par.indices["ill"],offspring_index)
+    end
+    ps["PopSize"] += 1
+    ps["ML"] += mutationload(par.traits[offspring_index])
+end
+```
+The aforementioned processes are unified in the `birth!` function, which initially identifies potential parents for mating, subsequently generates offspring, and finally updates the population state. 
+```julia
+#execute the addition of an individual
+function birth!(ps, par)
+    #choose two genetic configurations to mate
+    rand!(par.rndm,par.indices["healthy"])
+    #clean up parental configurations
+    for i in par.choosecopyfrom, j in par.choosecopyfrom
+        dropzeros!(par.traits[par.rndm[i]][j])
+    end
+    #select free index for offspring
+    if isempty(par.indices["free"])
+        offspring_index = length(par.traits) + 1
+        push!(par.traits,emptytraits(par.Nloci))
+    else
+        offspring_index = pop!(par.indices["free"])
+    end
+    #generate offsprings genetic configuration
+    offspring!(offspring_index, par, rand(par.MutationsPerBirth))
+    #add the individual to the current population state dictionary
+    updateps_birth!(ps,par,offspring_index)
+end
+```
+The removal of an individual at death is a relatively straightforward process. It merely entails freeing the index and updating the population state in accordance with the relevant changes.
+```julia
+#modify population state at death of an individual
+function updateps_death!(ps,par,fey_index)
+    ps["PopSize"] -= 1
+    ps["ML"] -= mutationload(par.traits[fey_index])
+end
+#execute the removal of an individual
+function death!(ps, par)
+    #choose fey
+    if rand()<=ps["Ill"]/ps["PopSize"]
+        fey_index = popat!(par.indices["ill"],rand(1:ps["Ill"]))
+        ps["Ill"] -= 1
+    else
+        fey_index = popat!(par.indices["healthy"],rand(1:(ps["PopSize"]-ps["Ill"])))
+    end
+    #add fey to gravejard
+    push!(par.indices["free"],fey_index)
+    #update population state
+    updateps_death!(ps,par,fey_index)
+end
+```
+As in the preceding cases, it is necessary to collate both the `birth!` and `death!` functions into a single `execute!` function.
+```julia
+function execute!(i,ps,par)
+    if i == 1
+        birth!(ps,par)
+    elseif i == 2
+        death!(ps,par)
+    else
+        error("Unknown event index: $i")
+    end
+end
+```
+Finally, the simulation can be executed following the initialisation of both a blank rates vector and a blank population history.
+```julia
+#setup empty rates vector
+initrates = Vector{typeof(par.birth)}(undef,2)
+
+#setup empty population history
+hist = Dict(x=>zeros(valtype(n0),length(t)) for x in keys(n0))
+
+run_gillespie!(
+        t,n0,
+        par,
+        execute!,
+        rates!,
+        initrates,
+        hist
+        )
+```
+In order to facilitate the analysis of the data, we present a straightforward graphical representation.
+```julia
+using Plots
+#plot the prevalence
+plot(t,hist["Ill"] ./ hist["PopSize"],color=:orange,label="")
+#plot the population size (without axis ticks)
+plot!(twinx(),hist["PopSize"],color=:gray,yticks=false,label="")
+#plot the mutation burden
+plot!(twinx(),hist["ML"] ./ hist["PopSize"],color=:red,label="")
+```
+!!! warning "Population extinction"
+    In the event of the population becoming extinct, the aforementioned method will result in an error, as the division of zero will occur. To circumvent this issue, it is recommended to first invoke the following function on the data set.
+    ```julia
+    replace_NaN(v) = map(x -> isnan(x) ? zero(x) : x, v)
+    ```
+![Simulation result showing the mutation load, prevalence and population size](https://roccminton.github.io/images/MLP.png)
+The grey line represents the population size, which is not represented by any axis. On the left y-axis, the prevalence is represented by the yellow line, while the mutation burden is shown by the red line on the right y-axis.
+
+### Custom `statistic!` function
 
