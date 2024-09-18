@@ -55,9 +55,9 @@ function run_gillespie!(time,n₀,par,execute!::F1,rates!::F2,initrates,populati
 end
 
 """
-    mainiteration!(pop_hist,rates,n0,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart)
+        mainiteration!(pop_hist,rates,n0,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart)
 
-    Mainiteration of the GillespieAlgorithm for complex models.
+Mainiteration of the GillespieAlgorithm for complex models.
 """
 function mainiteration!(pop_hist,rates,n0,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart) where {F1,F2,F3}
     #run simulation
@@ -75,9 +75,9 @@ function mainiteration!(pop_hist,rates,n0,ct,time,par,ex!::F1,r!::F2,stat!::F3,h
     end
 end
 """
-    mainiteration!(pop_hist,rates,n0::Real,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart)
+        mainiteration!(pop_hist,rates,n0::Real,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart)
 
-    Mainiteration of the GillespieAlgorithm for OneType Models where the population state is a number and the population history is a vector.
+Mainiteration of the GillespieAlgorithm for OneType Models where the population state is a number and the population history is a vector.
 """
 function mainiteration!(pop_hist,rates,n0::Real,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart) where {F1,F2,F3}
     #run simulation
@@ -94,10 +94,10 @@ function mainiteration!(pop_hist,rates,n0::Real,ct,time,par,ex!::F1,r!::F2,stat!
 end
 
 """
-    historylength(population_hisotry,par)
+        historylength(population_hisotry,par)
 
-    Return the simulation time based on the length of the population history.
-    If the population history is neither a `Vector` nor a `Matrix` it is assumed that the Parameter has a field called `historylength` that is then returned.
+Return the simulation time based on the length of the population history.
+If the population history is neither a `Vector` nor a `Matrix` it is assumed that the Parameter has a field called `historylength` that is then returned.
 """
 historylength(population_history::Vector,par) = length(population_history)
 historylength(population_history::Matrix,par) = length(view(population_history,:,1))
@@ -111,9 +111,9 @@ function dropzeros!(ps::Dict{<:Any,<:Number})
 end
 
 """
-    dropzeros!(ps::Dict{Any,Vector})
+        dropzeros!(ps::Dict{Any,Vector})
 
-    Eliminates all key value pairs for which the the firts entry of the vector of the value is zero.
+Eliminates all key value pairs for which the the firts entry of the vector of the value is zero.
 """
 function dropzeros!(ps::Dict{<:Any,<:Vector})
     for (x,vₓ) ∈ ps
@@ -122,16 +122,16 @@ function dropzeros!(ps::Dict{<:Any,<:Vector})
     nothing
 end
 """
-    dropzeros!(ps)
+        dropzeros!(ps)
 
-    Do nothing for non-dictionary inputs.
+Do nothing for non-dictionary inputs.
 """
 dropzeros!(ps) = nothing
 
 """
-     saveonestep!(pop_hist,index,ps,par)
+        saveonestep!(pop_hist,index,ps,par)
 
-     Sav one step of the simulation. Generic method if no explicit statistic! function is given.
+Save one step of the simulation. Generic method if no explicit statistic! function is given.
 """
 function saveonestep!(pop_hist,index,ps::Dict{<:Any,<:Number},par)
     for (x,nₓ) in ps
@@ -156,9 +156,9 @@ function saveonestep!(pop_hist,index,ps,par)
 end
 
 """
-    stop!(pop_hist,index,n0,par,stat!)
+        stop!(pop_hist,index,n0,par,stat!)
 
-    Fill the remaining population history with the (statistic of) the current population state if the evolution came to a halt.
+Fill the remaining population history with the (statistic of) the current population state if the evolution came to a halt.
 """
 function stop!(pop_hist,index,n0,par,stat!::F1) where {F1}
     for i ∈ index+1:historylength(pop_hist,par)
@@ -168,9 +168,9 @@ function stop!(pop_hist,index,n0,par,stat!::F1) where {F1}
 end
 
 """
-    onestep!(x_0,rates,t_0,t_end,par,ex!::F1,r!::F2)
+        onestep!(x_0,rates,t_0,t_end,par,ex!::F1,r!::F2)
 
-    Execute one step of the evolution by modifying `x_0` and `rates` and returning the current time `t_0`.
+Execute one step of the evolution by modifying `x_0` and `rates` and returning the current time `t_0`.
 """
 function onestep!(x_0,rates,t_0,t_end,par,ex!::F1,r!::F2) where {F1,F2}
     while t_0 ≤ t_end

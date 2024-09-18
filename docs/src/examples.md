@@ -265,9 +265,6 @@ To observe the findings, the size of the subpopulations is plotted over time, wi
 ```julia
 using Plots
 
-#setup plot
-p=plot(legend=false)
-
 #function to determine the color of the trait
 function c(x)
     #find the biggest and smallest key in the population history
@@ -282,6 +279,9 @@ function c(x)
     end
 end
 
+#setup plot
+p=plot(legend=false)
+
 for (x,his_x) in history
     plot!(p,time,his_x,color=cgrad(:thermal).colors.colors[c(x)])
 end
@@ -289,6 +289,7 @@ end
 p
 ```
 ![Simulation result with a mutation rate of 1/K](https://roccminton.github.io/images/TSS.png)
+
 Simulation results with a mutation rate of ``1/K`` where ``K`` is the carrying capacity.
 
 !!! warning "Mutation rate"
@@ -307,7 +308,7 @@ Simulation results with a mutation rate of ``1/K`` where ``K`` is the carrying c
         rates[x][2] += nₓ * ps[t₁][1] * par.competition(x,t₁)
     end
     ```
-and delete the `for`-loop over all other traits in the `addnewtrait!` function. In instances where the number of distinct traits is considerable, this approach is advised.
+    and delete the `for`-loop over all other traits in the `addnewtrait!` function. In instances where the number of distinct traits is considerable, this approach is advised.
 
 ## 3. High-dimensional model
 The final example we will present is the most complex. We implement a model to analyse the dynamics of complete recessive lethal diseases. Each disease is triggered by the mutation of a gene and is expressed only in a homozygous state. Therefore, the traitspace for this model is ``\mathcal{X}=\{0,1\}^{2\times N}`` where ``N`` is the number of genes. A detailed description and results of numerous simulations with this exact framework can be found [here](https://arxiv.org/abs/2406.09094)[^LaRocca24].
@@ -583,7 +584,8 @@ plot!(twinx(),hist["ML"] ./ hist["PopSize"],color=:red,label="")
     replace_NaN(v) = map(x -> isnan(x) ? zero(x) : x, v)
     ```
 ![Simulation result showing the mutation load, prevalence and population size](https://roccminton.github.io/images/MLP.png)
+
 The grey line represents the population size, which is not represented by any axis. On the left y-axis, the prevalence is represented by the yellow line, while the mutation burden is shown by the red line on the right y-axis.
 
 ### Custom `statistic!` function
-
+Thus far, the only function employed for the purpose of saving the population history was the built-in [`DenseGillespieAlgorithm.saveonestep!`](@ref) function, which in this case saves the mutation burden, prevalence, and population size over time. However, given the intricate population structure of the model, it may be beneficial to consider saving additional statistics that extend beyond mere numbers over time. For this example, we are interested in saving the allele frequencies of the mutated allele per position over time. This necessitates the definition of a custom `statistic!` function.
