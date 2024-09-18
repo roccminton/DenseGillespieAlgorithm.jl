@@ -101,7 +101,7 @@ In the context of adaptive dynamics models, individuals are characterised by a s
 
 For further insight into the subject of adaptive dynamics models, we would direct the reader to the [lecture notes](https://www.dropbox.com/scl/fi/8f0pdhq471unbla5dw5xh/LN_SMLS.pdf?rlkey=b0eodhvonuehueuancxeoqloz&st=eqd3ffwj&dl=0) by Anton Bovier.
 
-We present a specific case study of an adaptive dynamics model, originally proposed by Dieckmann and Doebeli[^Dieckmann99]. Here the trait space is ``\\mathcal{X} = [-1,1] \subset \\mathbb{R}``. The birth rate is given by ``b(x)=exp(-x^2/2\\sigma^2_b`` for some ``\\sigma_b > 0``. The death rate is constant ``d(x) = d`` and the competion between individuals depends only on theri distance by ``c(x,y)=exp(-(x-y)^2/2\\sigma^2_c`` for some ``\\sigma_c > 0``. Moreover the mutation kernel, that chooses the new trait of an offspring at birth is a Gaussian law with mean 0 and variance 0.1 conditioned to [-1,1].
+We present a specific case study of an adaptive dynamics model, originally proposed by Dieckmann and Doebeli[^Dieckmann99]. Here the trait space is ``\mathcal{X} = [-1,1] \subset \mathbb{R}``. The birth rate is given by ``b(x)=exp(-x^2/2\sigma^2_b`` for some ``\sigma_b > 0``. The death rate is constant ``d(x) = d`` and the competion between individuals depends only on theri distance by ``c(x,y)=exp(-(x-y)^2/2\sigma^2_c`` for some ``\sigma_c > 0``. Moreover the mutation kernel, that chooses the new trait of an offspring at birth is a Gaussian law with mean 0 and variance 0.1 conditioned to [-1,1].
 
 [^Dieckmann99]:U. Dieckmann, M. Doebeli, On the origin of species by sympatric speciation. _Nature_ 400:354-357, 1999
 
