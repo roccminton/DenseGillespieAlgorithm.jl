@@ -296,6 +296,6 @@ p
     Nevertheless, increasing the population size in this scenario does not significantly prolong the runtime of the algorithm. This is an advantage of using dictionaries and caching the competition. However, this approach is only effective when the mutation rate is scaled with the population size (as demonstrated in the above example).
 
 !!! info "Empty cache"
-    It should be noted that the algorithm performs regular checks for subpopulations in the dictionary with a population size of zero. In the event that such subpopulations are identified, they are removed in order to prevent an excessive expansion of the dictionary. This process is carried out by the [`dropzeros!`](@ref) function.
+    It should be noted that the algorithm performs regular checks for subpopulations in the dictionary with a population size of zero. In the event that such subpopulations are identified, they are removed in order to prevent an excessive expansion of the dictionary. This process is carried out by the [`DenseGillespieAlgorithm.dropzeros!`](@ref) function.
 
 ## High-dimensional model
