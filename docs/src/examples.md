@@ -589,3 +589,112 @@ The grey line represents the population size, which is not represented by any ax
 
 ### Custom `statistic!` function
 Thus far, the only function employed for the purpose of saving the population history was the built-in [`DenseGillespieAlgorithm.saveonestep!`](@ref) function, which in this case saves the mutation burden, prevalence, and population size over time. However, given the intricate population structure of the model, it may be beneficial to consider saving additional statistics that extend beyond mere numbers over time. For this example, we are interested in saving the allele frequencies of the mutated allele per position over time. This necessitates the definition of a custom `statistic!` function.
+
+The initial step is to incorporate an additional function call into the existing functions `updateps_death!` and `updateps_birth!` of the form `updatestats_death!(ps, par, fey_index)` and `updatestats_birth(ps, par, offspring_index)`, respectively. This allows us to modify the new statistic that we wish to utilise at each event, rather than recalculating it from the current population state after every full time step, which is the usual process.
+
+!!! tip "Empty functions"
+    In the event that there is no intention to update the statistical data at each stage, it is nonetheless recommended that the function call `updatestats_event!` be retained in order to ensure the flexibility and reusability of the code. In the absence of a required function, the implementation of a generic function of the form 
+    ```julia
+    function updatestats_death! end
+    function updatestats_birth! end
+    ```
+    is sufficient.
+
+In order to enhance the flexibility of the system, a custom data type has been defined to accommodate the various statistical elements associated with the population history. This approach facilitates the incorporation of new statistics, should the need arise.
+
+```julia
+#type to hold population history
+struct PopHist
+    #mutation burden, prevalence and population size
+    mlp :: Dict 
+    #allele frequencies per postion
+    loadpos :: Array
+end
+```
+!!! note "Unmutable struct"
+    It is important to note that the variable type of the population history has been defined as unmutable, which may appear counterintuitive at first glance. However, upon closer examination, it becomes evident that the elements within the struct are only generated once and then populated with data. Meanwhile, the container itself (array, dict, etc.) remains unchanged. This allows for the use of a faster and lighter unmutable object. Conversely, if there is a need to modify the fields within the struct, it would be necessary to define it as a `mutable struct`.
+
+We choose to save the allele frequencies of the mutated allele at each position as a ``T\times N``  matrix, where ``T`` is the total length of the simulation. Each column of the matrix represents the allele frequencies for a single time step. In fact, we will save the precise number of mutations per gene, leaving the division by the population size to be performed subsequently, once the simulation has been completed.
+In order to utilise the enhanced performance afforded by the addition of the updatestats_event function, it is necessary to create a temporary storage location for the current allele frequencies prior to their final saving to the storage medium for subsequent analysis. Once again, the parameter variable that is passed to every significant function is employed for this purpose.
+```julia
+#add blank current allele frequencies to parameter variable
+par = (
+    par...,
+    cafs = zeros(Int,par.Nloci)
+)
+```
+Given the type configuration that is added or removed from the population, the adjustment of the current allele frequencies is a relatively straightforward process.
+```julia
+#add or remove one individual from allele frequency vector
+function update_allelefreqs!(af,ind,i)
+    af .+= i .* ind[1]
+    af .+= i .* ind[2]
+end
+```
+Furthermore, the corresponding functions for birth and death can be developed upon this function.
+```julia
+updatestats_death!(ps,par,index) = update_allelefreqs!(par.cafs,par.traits[index],-1)
+updatestats_birth!(ps,par,index) = update_allelefreqs!(par.cafs,par.traits[index],+1)
+```
+The additional statistics have now been incorporated into the system, and the next stage is to save the data at each time step within the specified time horizon into the `PopHist` type. This process is carried out by the following function. Additionally, the function responsible for saving the supplementary statistical data is merged with the one that stores the mutation burden, prevalence, and population size, which were previously saved in the basic example. This allows the creation of the custom `statistic!` function.
+
+```julia
+function saveafs!(allelefreqs,index,ps,par)
+        view(allelefreqs,index,:) .= par.cafs
+end
+
+function statistic!(pophist::PopHist,index,ps,par)
+    #save standard statistic
+    DenseGillespieAlgorithm.saveonestep!(pophist.mlp,index,ps,par)
+    #save additional statistic
+    saveafs!(pophist.allelefreqs,index,ps,par)
+   end
+```
+As previously described, the final stage of the process is to set up the initial rates, the initial population history, and then to execute the run_gillespie! function together with the newly defined `statistic!` function as a keyword argument.
+
+```julia
+#setup empty rates vector
+initrates = Vector{typeof(par.birth)}(undef,2)
+
+#setup empty population history
+hist = PopHist(
+    Dict(x=>zeros(valtype(n0),length(t)) for x in keys(n0)),
+    zeros(Integer,(length(t),par.Nloci,))
+    )
+
+run_gillespie!(
+        t,n0,
+        par,
+        execute!,
+        rates!,
+        initrates,
+        hist,
+        statistic! =statistic!
+        )
+```
+To analyse the data, one possible approach would be to construct a small GIF that generates plots of the allele frequencies at each position over time.
+```julia
+using Plots
+
+#calculate frequencies from absolute numbers of mutations
+afs = hist.allelefreqs ./ hist.mlp["PopSize"]
+#maximal frequencie for axis limit
+ymax = maximum(afs)
+#create animation
+anim = @animate for i in 0:100
+    bar(view(afs,i+1,:),ylim=(0,ymax),label="")
+end every 10
+#show animation
+gif(anim)
+```
+
+![Animation of allele frequencies over time](https://roccminton.github.io/images/AFs.gif)
+
+!!! "Time intervals"
+    In certain instances, the requisite statistic may require a considerable amount of memory space or a significant amount of time to calculate. In such cases, it may be more efficient to save and calculate the statistic not in every time step, but rather only after larger intervals. This can be achieved in two ways.
+    First, the time horizon provided to the algorithm can be adjusted to a coarser resolution, for instance, `0:10:1000` instead of `0:1000`, resulting in a step size of 10 rather than 1. It should be noted that in such instances, the events continue to occur at the (potentially very small) event rates, but the saving mechanism is executed at each full time step. In this scenario, however, all the statistics that are generated are saved exclusively at the larger time steps.
+    Second, in the event that a specific statistic is particularly resource-intensive, it is possible to implement an `if` condition within the `statistics!` function that will then save the statistic only if the time index meets the specified condition.
+
+!!! tip "Snapshots"
+    It is a source of considerable frustration to have invested a significant amount of time in running a comprehensive simulation only to realise, upon completion, that an alternative statistic might also warrant examination. Consequently, it was beneficial on occasion to also take "snapshots" at every couple of generations.
+    Therefore, a random sample of the population was selected and all the information for that subpopulation was stored. As the population size was reduced by taking a sample from the population and the time horizon was reduced by taking these snapshots on a coarse time grid, the amount of memory required remained within acceptable limits.
