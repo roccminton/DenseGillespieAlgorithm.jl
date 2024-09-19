@@ -15,7 +15,7 @@ Run a exact stochastic simulation, return and fill the `population_history`.
 - `statistic!`: additional statistic function _(optional)_
 
 # Extended help
-- Note that `n₀,initrates,population_history` all three get modified during the simulation
+- Note that `n₀,initrates,population_history` all three get modified during the simulation.
 - The algorithm expects the `execute!` function to have the following signature
     ```julia
     execute!(i::Number,n₀,par)
@@ -32,8 +32,8 @@ Run a exact stochastic simulation, return and fill the `population_history`.
     ```julia
     statistic!(population_hist,t,n₀,par)
     ```
-    where the population history gets modified at position t with the current population state `n₀`.
-- Note that the `population_history` needs to be accessable via index from 1 to `length(time)`, or if `hstart` is given from `1+hstart` to `length(time)+hstart`. Unless a specified `statistic!` function is given.
+    where the population history gets modified at position `t` with the current population state `n₀`.
+- Note that the `population_history` needs to be accessible via index from 1 to `length(time)`, or if `hstart` is given from `1+hstart` to `length(time)+hstart`. Unless a specified `statistic!` function is given.
 - Note that the initial population state `n₀` must match the `population_history` in the sense that `population_history :: Vector{typeof(n₀)}`.  Unless a specified `statistic!` function is given.
 - The parameter variable `par` is passed through all functions (`execute!,rates!,statistics!`), thereby affording the user additional flexibility.
 """
@@ -57,7 +57,7 @@ end
 """
         mainiteration!(pop_hist,rates,n0,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart)
 
-Mainiteration of the GillespieAlgorithm for complex models.
+Main iteration of the GillespieAlgorithm for complex models.
 """
 function mainiteration!(pop_hist,rates,n0,ct,time,par,ex!::F1,r!::F2,stat!::F3,hstart) where {F1,F2,F3}
     #run simulation
@@ -233,10 +233,10 @@ function onestep!(x_0::Dict,rates::Vector,t_0,t_end,par,ex!::F1,r!::F2) where {F
 end
 
 """
-    nexteventandtime(rates::Vector{Float64})
+        nexteventandtime(rates::Vector{Float64})
 
-    Sample a exponential distributed random variable to determine the time for the next event and calls `choose_event`.
-    The return value is a tuple consiting of the envent index returned by `choose_event` and the time to the next event.
+Sample a exponential distributed random variable to determine the time for the next event and calls `choose_event`.
+The return value is a tuple consiting of the envent index returned by `choose_event` and the time to the next event.
 """
 function nexteventandtime(rates)
     #calculate total event rate
@@ -251,10 +251,10 @@ function nexteventandtime(rates)
 end
 
 """
-    nexteventandtime(rates::Dict)
+        nexteventandtime(rates::Dict)
 
-    Sample a exponential distributed random variable to determine the time for the next event and calls `choose_event`.
-    The return value is a triple consiting of the envent index and trait returned by `choose_event` and the time to the next event.
+Sample a exponential distributed random variable to determine the time for the next event and calls `choose_event`.
+The return value is a triple consisting of the event index and trait returned by `choose_event` and the time to the next event.
 """
 function nexteventandtime(rates::Dict)
     #calculate total event rate
@@ -269,10 +269,10 @@ function nexteventandtime(rates::Dict)
 end
 
 """
-    chooseevent(rates::Vector{Float64},total_rate::Float64)
+        chooseevent(rates::Vector{Float64},total_rate::Float64)
 
-    Choose from the vector of total rates at random one of the indices of the vector according to their rates.
-    The value 0 is returned if the total rates are positive, but too smale to let the evolution continue.
+Choose from the vector of total rates at random one of the indices of the vector according to their rates.
+The value 0 is returned if the total rates are positive, but too smale to let the evolution continue.
 """
 function chooseevent(rates,total_rate)
     #make it a uniform random variable in (0,total_rate)
@@ -286,10 +286,10 @@ function chooseevent(rates,total_rate)
 end
 
 """
-    chooseevent(rates::Dict,total_rate::Float64)
+        chooseevent(rates::Dict,total_rate::Float64)
 
-    Choose from the dictionary of total rates at random one of the keys of the dictionary according to their values.
-    The value 0 is returned if the total rates are positive, but too smale to let the evolution continue.
+Choose from the dictionary of total rates at random one of the keys of the dictionary according to their values.
+The value 0 is returned if the total rates are positive, but too smale to let the evolution continue.
 """
 function chooseevent(rates::Dict,total_rate)
     #make it a uniform random variable in (0,total_rate)
@@ -305,9 +305,9 @@ function chooseevent(rates::Dict,total_rate)
 end
 
 """
-    sumsumdict(D::Dict{String,Vector})
+        sumsumdict(D::Dict{String,Vector})
 
-    Calculate the sum of the sums of the vectors that are the values of a dictionary.
+Calculate the sum of the sums of the vectors that are the values of a dictionary.
 """
 function sumsumdict(D)
     result = zero(eltype(valtype(D)))

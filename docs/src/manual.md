@@ -37,14 +37,14 @@ Subsequently, all the interaction functions should be incorporated into a single
     execute!(i,x,par)
 ```
 
-Next we need to define the rates function. There must be as many rates as there are interaction events. Therefore the variable `initrates` is usually a `Vector` with as many entries as there are events. The rates function takes as input the inital rates, the current population state and the additional model parameters. The function should calculate the rates according to the population state and modify the initrates accordingly.
+Next we need to define the rates function. There must be as many rates as there are interaction events. Therefore the variable `initrates` is usually a `Vector` with as many entries as there are events. The rates function takes as input the initial rates, the current population state and the additional model parameters. The function should calculate the rates according to the population state and modify the `initrates` accordingly.
 
 ```julia
     rates!(initrates,x,par)
 ```
 
 !!! note "Function names"
-    The function name may be designated as desired, as they are passed to the ` function. The nomenclature is inconsequential.
+    The function name may be designated as desired, as they are passed to the core function. The nomenclature is inconsequential.
 
 !!! danger "Function signature"
     Nevertheless, it is crucial to maintain the original function signature, which entails retaining the sequence and the number of arguments as they are called within the algorithmic structure.
@@ -69,8 +69,8 @@ run_gillespie!
 
 Once the simulation has reached its conclusion, the modified population history is returned for further analysis.
 
-## Customized Statistics
-For many high-dimensional models, the exact configuration at any given time is too much information. In many cases only summery statistics are needed. To avoid accumulating too much data during the runtime of the algorithm that is not needed afterwards, you can define your own statistics! function. In this case, only the information you want to collect is stored for further analysis.
+## Customized statistics
+For many high-dimensional models, the exact configuration at any given time is too much information. In many cases only summery statistics are needed. To avoid accumulating too much data during the runtime of the algorithm that is not needed afterwards, you can define your own `statistics!` function. In this case, only the information you want to collect is stored for further analysis.
 
 As for the `rates!` and `execute!` functions, the function signature is of particular significance. The function accepts as input the population history, which is modified by the function and the current time index, hence the index at which the statistics of the current population state are saved. Additionally, the current state and the model parameter are required.
 

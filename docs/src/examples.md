@@ -90,7 +90,7 @@ plot(hist,label=["S" "I" "R"])
 ```
 ![SIR Plot](https://roccminton.github.io/images/SIR.png)
 
-!!! note "Note"
+!!! note "JumpProcesses.jl"
     While it is feasible to construct such straightforward examples using the DenseGillespieAlgorithm, this is not the typical application. For relatively simple models, the [JumpProcess.jl](https://docs.sciml.ai/JumpProcesses/stable/) package offers greater flexibility and facilitates the implementation process.
 
 ## 2. Continuous trait space
@@ -362,7 +362,7 @@ function rates!(rates, ps, par)
 end
 ```
 The definition of the function that executes the birth is a more challenging undertaking, given that it involves three mechanisms: mating, recombination and mutation. 
-Nevertheless, prior to an explication of the implementation of the execute! function, it is necessary to describe the means by which the population configuration is saved internally.
+Nevertheless, prior to an explication of the implementation of the `execute!` function, it is necessary to describe the means by which the population configuration is saved internally.
 Since the size of any given trait is relatively large (``2N`` bytes), and since we anticipate a significant number of different traits, but a limited population size, we have chosen to construct a vector of traits that is as large as the expected population size, with additional space for fluctuations. This vector will store all the traits. Furthermore, a dictionary of indices is maintained, which points to the indices of traits in the vector. The dictionary differentiates between traits that are either alive and healthy, or alive but ill (thus expressing the disease and unable to reproduce), or that are not part of the current population. The aforementioned free traits can then be modified if new offsprings are born, eliminating the necessity of initiating a new ``2 \times N`` matrix of `Bool`s each time. This method allows for the saving of a considerable amount of memory.
 The production of new traits is dependent upon the absence of free indices. Upon the death of a fey individual, the index is released into the group of free indices, where it may be reborn as a new trait at a future point in time.
 In order to initiate the trait vector, which encompasses all individual genetic configurations, we have implemented a function that takes the initial population state as an input and draws a possible trait configuration from it. 
@@ -615,7 +615,7 @@ end
     It is important to note that the variable type of the population history has been defined as unmutable, which may appear counterintuitive at first glance. However, upon closer examination, it becomes evident that the elements within the struct are only generated once and then populated with data. Meanwhile, the container itself (array, dict, etc.) remains unchanged. This allows for the use of a faster and lighter unmutable object. Conversely, if there is a need to modify the fields within the struct, it would be necessary to define it as a `mutable struct`.
 
 We choose to save the allele frequencies of the mutated allele at each position as a ``T\times N``  matrix, where ``T`` is the total length of the simulation. Each column of the matrix represents the allele frequencies for a single time step. In fact, we will save the precise number of mutations per gene, leaving the division by the population size to be performed subsequently, once the simulation has been completed.
-In order to utilise the enhanced performance afforded by the addition of the updatestats_event function, it is necessary to create a temporary storage location for the current allele frequencies prior to their final saving to the storage medium for subsequent analysis. Once again, the parameter variable that is passed to every significant function is employed for this purpose.
+In order to utilise the enhanced performance afforded by the addition of the `updatestats_event!` function, it is necessary to create a temporary storage location for the current allele frequencies prior to their final saving to the storage medium for subsequent analysis. Once again, the parameter variable that is passed to every significant function is employed for this purpose.
 ```julia
 #add blank current allele frequencies to parameter variable
 par = (
@@ -650,7 +650,7 @@ function statistic!(pophist::PopHist,index,ps,par)
     saveafs!(pophist.allelefreqs,index,ps,par)
    end
 ```
-As previously described, the final stage of the process is to set up the initial rates, the initial population history, and then to execute the run_gillespie! function together with the newly defined `statistic!` function as a keyword argument.
+As previously described, the final stage of the process is to set up the initial rates, the initial population history, and then to execute the [`run_gillespie!`](@ref) function together with the newly defined `statistic!` function as a keyword argument.
 
 ```julia
 #setup empty rates vector
@@ -693,7 +693,7 @@ gif(anim)
 !!! tip "Time intervals"
     In certain instances, the requisite statistic may require a considerable amount of memory space or a significant amount of time to calculate. In such cases, it may be more efficient to save and calculate the statistic not in every time step, but rather only after larger intervals. This can be achieved in two ways.
     First, the time horizon provided to the algorithm can be adjusted to a coarser resolution, for instance, `0:10:1000` instead of `0:1000`, resulting in a step size of 10 rather than 1. It should be noted that in such instances, the events continue to occur at the (potentially very small) event rates, but the saving mechanism is executed at each full time step. In this scenario, however, all the statistics that are generated are saved exclusively at the larger time steps.
-    Second, in the event that a specific statistic is particularly resource-intensive, it is possible to implement an `if` condition within the `statistics!` function that will then save the statistic only if the time index meets the specified condition.
+    Second, in the event that a specific statistic is particularly resource-intensive, it is possible to implement an `if` condition within the `statistic!` function that will then save the statistic only if the time index meets the specified condition.
 
 !!! tip "Snapshots"
     It is a source of considerable frustration to have invested a significant amount of time in running a comprehensive simulation only to realise, upon completion, that an alternative statistic might also warrant examination. Consequently, it was beneficial on occasion to also take "snapshots" at every couple of generations.
