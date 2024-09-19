@@ -58,7 +58,7 @@ The final step before running the simulation is to define the model parameters, 
 The time horizon of the simulation is tipically a `UnitRange`, but can be anything that can be enumerated. 
 The type of initial population state should correspond to the functionalities defiend in the function `rates!` and `execute!` as they use and modify this type. 
 The empty population history should also match the type of population state, as it will be copied into the population history. In addition, if the population history is a vector or matrix, it should be at least as long as the time horizon.
-You can customise the saving process with your own Statistics! function. In this case, you will have to adapt the coupling history to the functionalities of this function. For more details, see [Customized Statistics](@ref)
+You can customise the saving process with your own Statistics! function. In this case, you will have to adapt the coupling history to the functionalities of this function. For more details, see [Customized statistics](@ref)
 
 ## Execute the simulation
 With everything in place, it is time to run the simulations. To do this, call the `run_gillespie!` function from the package. 
