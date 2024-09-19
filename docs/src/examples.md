@@ -590,7 +590,7 @@ The grey line represents the population size, which is not represented by any ax
 ### Custom `statistic!` function
 Thus far, the only function employed for the purpose of saving the population history was the built-in [`DenseGillespieAlgorithm.saveonestep!`](@ref) function, which in this case saves the mutation burden, prevalence, and population size over time. However, given the intricate population structure of the model, it may be beneficial to consider saving additional statistics that extend beyond mere numbers over time. For this example, we are interested in saving the allele frequencies of the mutated allele per position over time. This necessitates the definition of a custom `statistic!` function.
 
-The initial step is to incorporate an additional function call into the existing functions `updateps_death!` and `updateps_birth!` of the form `updatestats_death!(ps, par, fey_index)` and `updatestats_birth(ps, par, offspring_index)`, respectively. This allows us to modify the new statistic that we wish to utilise at each event, rather than recalculating it from the current population state after every full time step, which is the usual process.
+The initial step is to incorporate an additional function call into the existing functions `updateps_death!` and `updateps_birth!` of the form `updatestats_death!(ps, par, fey_index)` and `updatestats_birth!(ps, par, offspring_index)`, respectively. This allows us to modify the new statistic that we wish to utilise at each event, rather than recalculating it from the current population state after every full time step, which is the usual process.
 
 !!! tip "Empty functions"
     In the event that there is no intention to update the statistical data at each stage, it is nonetheless recommended that the function call `updatestats_event!` be retained in order to ensure the flexibility and reusability of the code. In the absence of a required function, the implementation of a generic function of the form 
@@ -690,7 +690,7 @@ gif(anim)
 
 ![Animation of allele frequencies over time](https://roccminton.github.io/images/AFs.gif)
 
-!!! "Time intervals"
+!!! tip "Time intervals"
     In certain instances, the requisite statistic may require a considerable amount of memory space or a significant amount of time to calculate. In such cases, it may be more efficient to save and calculate the statistic not in every time step, but rather only after larger intervals. This can be achieved in two ways.
     First, the time horizon provided to the algorithm can be adjusted to a coarser resolution, for instance, `0:10:1000` instead of `0:1000`, resulting in a step size of 10 rather than 1. It should be noted that in such instances, the events continue to occur at the (potentially very small) event rates, but the saving mechanism is executed at each full time step. In this scenario, however, all the statistics that are generated are saved exclusively at the larger time steps.
     Second, in the event that a specific statistic is particularly resource-intensive, it is possible to implement an `if` condition within the `statistics!` function that will then save the statistic only if the time index meets the specified condition.
