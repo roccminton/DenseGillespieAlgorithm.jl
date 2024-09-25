@@ -28,7 +28,7 @@ end
     @test DenseGillespieAlgorithm.historylength(d,par) == l
 
     #test par
-    p = (historylength = l)
+    p = (historylength = l,)
     @test DenseGillespieAlgorithm.historylength("something",p) == l
 end
 
