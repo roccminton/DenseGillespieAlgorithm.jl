@@ -20,7 +20,7 @@ end
     @test DenseGillespieAlgorithm.historylength(v,par) == l
 
     #test matrix
-    m = zeros(3,l)
+    m = zeros(l,3)
     @test DenseGillespieAlgorithm.historylength(m,par) == l
 
     #test dict
