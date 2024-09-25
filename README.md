@@ -1,7 +1,7 @@
 # DenseGillespieAlgorithm
 
 [![Build Status](https://github.com/roccminton/DenseGillespieAlgorithm.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/roccminton/DenseGillespieAlgorithm.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://roccminton.github.io/DenseGillespieAlgorithm.jl/stable)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://roccminton.github.io/DenseGillespieAlgorithm.jl/stable/DGAPackage.html)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://roccminton.github.io/DenseGillespieAlgorithm.jl/dev/DGAPackage.html)
 
 DenseGillespieAlgorithm.jl is a Julia package designed for performing exact stochastic simulations of systems with dense reaction networks. This package implements a modified Gillespie algorithm that is highly optimized for problems where the number of different species is high, but the number of reaction events stays small. It is ideal for simulating stochastic population dynamics, and other systems that require exact trajectory tracking in systems with a large number of interacting species.
