@@ -40,7 +40,7 @@ end
     @test d == expected
 
     #Test Number 2
-    d = Dict("a" => 1.0, "b" => 0.0, c => 0.0)
+    d = Dict("a" => 1.0, "b" => 0.0, "c" => 0.0)
     expected = Dict("a" => 1.0)
     DenseGillespieAlgorithm.dropzeros!(d)
     @test d == expected
