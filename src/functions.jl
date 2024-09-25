@@ -101,6 +101,7 @@ If the population history is neither a `Vector` nor a `Matrix` it is assumed tha
 """
 historylength(population_history::Vector,par) = length(population_history)
 historylength(population_history::Matrix,par) = length(view(population_history,:,1))
+historylength(population_history::Dict,par) = length(population_history[collect(keys(population_history))[1]])
 historylength(population_history,par) = par.historylength
 
 function dropzeros!(ps::Dict{<:Any,<:Number})
