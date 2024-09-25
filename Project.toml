@@ -1,7 +1,7 @@
 name = "DenseGillespieAlgorithm"
 uuid = "196457aa-616b-4d30-8659-0f081272c821"
 authors = ["Luis Aniello La Rocca"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
